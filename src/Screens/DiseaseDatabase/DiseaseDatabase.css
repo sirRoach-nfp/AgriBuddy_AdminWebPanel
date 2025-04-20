@@ -1,0 +1,25 @@
+
+
+.headerWrapper_diseaseDB{
+    display: flex;
+    flex-direction: row;
+    border: 1px solid red;
+}
+
+
+.contentWrapper_diseaseDB{
+    width: 100%;
+    border: 1px solid yellow;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+
+.cropCardsWrapper_diseaseDB{
+    width: 100%;
+    gap: 20px;
+    border: 1px solid black;
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 items per row */
+}

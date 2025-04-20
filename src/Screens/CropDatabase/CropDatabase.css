@@ -1,0 +1,24 @@
+
+.headerWrapper_CropDb{
+    display: flex;
+    flex-direction: row;
+    border: 1px solid red;
+  
+}
+
+
+.contentWrapper_CropDb{
+    width: 100%;
+    border: 1px solid yellow;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.cropCardsWrapper_CropDb{
+    width: 100%;
+    gap: 20px;
+    border: 1px solid black;
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 items per row */
+}

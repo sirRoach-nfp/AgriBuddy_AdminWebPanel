@@ -1,0 +1,33 @@
+.mainWrapper{
+    
+    width: 80vw;
+
+    margin-left: 'auto';
+    min-height: 100%;
+    height: fit-content;
+}
+
+
+.headerWrapper_ArticleEdit{
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.backText_ArticleEdit{
+    margin-left: 10px;
+}
+
+.backWrapper_ArticleEdit{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  
+    padding-left: 15px;
+    padding-right: 15px;
+    justify-content: center;
+}
