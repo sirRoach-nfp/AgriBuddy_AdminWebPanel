@@ -61,9 +61,7 @@ export default function CropDatabase() {
                     <div className="headerWrapper_CropDb">
                         <Button variant="contained" onClick={navigateToUpload}>Create New Crop Data</Button>
 
-                        <div className="searchWrapper">
-                            <input type="text" placeholder="Search" />
-                        </div>
+
                     </div>
 
 

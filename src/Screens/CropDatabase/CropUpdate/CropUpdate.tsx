@@ -473,7 +473,7 @@ export default function CropUpdate(){
                         <ArrowBackIcon sx={{fontSize:30,marginTop:0,marginBottom:0}}/>
                         <span className="backText_ArticleEdit">Return</span>
                     </div>
-                    <Button variant="contained"  sx={{marginLeft:'auto'}} onClick={()=>setOpenDeleteConfirm(true)}>Delete Crop Data</Button>
+                    <Button variant="contained"  sx={{marginLeft:'auto', backgroundColor:'red'}} onClick={()=>setOpenDeleteConfirm(true)}>Delete Crop Data</Button>
                     <Button variant="contained"  sx={{marginLeft:'5px'}} onClick={()=>setOpenUpdateConfirm(true)}>Save Changes</Button>
 
             </div>

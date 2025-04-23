@@ -334,8 +334,8 @@ export default function PestUpload(){
                         />
                 </div>
 
-                <Button onClick={()=>console.log("Symptoms snapshots : ", selectedSymptomImage)}>check symptom images</Button>
-                <Button onClick={()=>setOpenUploadConfirm(true)}>Upload Pest Data</Button>
+                
+                <Button onClick={()=>setOpenUploadConfirm(true)} variant="contained">Upload Pest Data</Button>
             </div>
         </>
     )

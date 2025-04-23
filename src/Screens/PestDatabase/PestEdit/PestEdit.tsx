@@ -122,6 +122,8 @@ export default function PestEdit(){
 
         try{
 
+            let newCover = cover;
+
             setOpenUpdateConfirm(false)
             const newSymptomsSnapshot = symptomImages.filter(img => typeof img === "string");
 
@@ -168,7 +170,7 @@ export default function PestEdit(){
             }
             
             
-
+            console.log("new cover : ", cover)
             if(cover && typeof cover !== "string"){
                 const formData = new FormData();
                     formData.append("file",cover);
@@ -188,7 +190,7 @@ export default function PestEdit(){
                     const data = await response.json();
                 if(data.secure_url){
 
-                    setCover(data.secure_url)
+                    newCover = (data.secure_url)
                 }else{
                     console.error("Upload failed : ", data)
                 }
@@ -211,7 +213,7 @@ export default function PestEdit(){
                 Ecology:ecology,
                 DamageSymptoms:symptomsData,
                 ControlMeasures:controlMeasures,
-                PestSnapshot:cover
+                PestSnapshot:newCover
             }
 
             console.log("Pest data object : ", newPestData)
@@ -475,7 +477,7 @@ export default function PestEdit(){
                         <ArrowBackIcon sx={{fontSize:30,marginTop:0,marginBottom:0}}/>
                         <span className="backText_ArticleEdit">Return</span>
                     </div>
-                    <Button variant="contained"  onClick={()=>setOpenDeleteConfirm(true)} sx={{marginLeft:'auto'}}>Delete Article</Button>
+                    <Button variant="contained"  onClick={()=>setOpenDeleteConfirm(true)} sx={{marginLeft:'auto',backgroundColor:'red'}}>Delete Article</Button>
                     <Button variant="contained" onClick={()=>setOpenUpdateConfirm(true)} sx={{marginLeft:'5px'}}>Save Edited Article</Button>
 
                 </div>
@@ -604,8 +606,8 @@ export default function PestEdit(){
                         />
                 </div>
 
-                <Button onClick={()=>console.log("Symptoms snapshots : ", symptomImages)}>check symptom images</Button>
-                <Button onClick={()=>uploadPest()}>Upload Pest Data</Button>
+         
+             
             </div>
         </>
     )

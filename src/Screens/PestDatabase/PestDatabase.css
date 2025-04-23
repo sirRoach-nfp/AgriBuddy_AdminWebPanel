@@ -2,8 +2,8 @@
 
 .mainWrapper_PestDb{
 
-    width: 74vw;
-    border: 1px solid;
+    width: 80vw;
+    border: 0px solid;
     margin-left: 'auto';
     min-height: 100%;
     height: fit-content;
@@ -14,13 +14,13 @@
 .headerWrapper_PestDb{
     display: flex;
     flex-direction: row;
-    border: 1px solid red;
+    border: 0px solid red;
 }
 
 
 .contentWrapper_PestDb{
     width: 100%;
-    border: 1px solid yellow;
+    border: 0px solid yellow;
     margin-top: 10px;
     padding-top: 10px;
 }
@@ -28,7 +28,7 @@
 .pestCardsWrapper_PestDb{
     width: 100%;
     gap: 20px;
-    border: 1px solid black;
+    border: 0px solid black;
     margin-top: 20px;
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 2 items per row */

@@ -328,8 +328,7 @@ export default function DiseaseUpload(){
                         />
                 </div>
 
-                <Button onClick={()=>console.log("Symptoms snapshots : ", selectedSymptomImage)}>check symptom images</Button>
-                <Button onClick={()=>setOpenUploadConfirm(true)}>Upload Disease Data</Button>
+                <Button onClick={()=>setOpenUploadConfirm(true)} variant="contained" sx={{marginTop:'20px'}}>Upload Disease Data</Button>
             </div>
         
         </>

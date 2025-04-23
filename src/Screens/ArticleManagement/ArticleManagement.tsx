@@ -89,9 +89,7 @@ export default function ArticleManagement() {
                 <div className="headerWrapper">
                     <Button variant="contained" onClick={navigateToUpload}>Add Article</Button>
 
-                    <div className="searchWrapper">
-                        <input type="text" placeholder="Search" />
-                    </div>
+
                 </div>
 
 

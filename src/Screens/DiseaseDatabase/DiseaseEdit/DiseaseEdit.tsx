@@ -106,6 +106,7 @@ export default function DiseaseEdit(){
         try{
             
             setOpenUpdateConfirm(false)
+            let newCover = cover;
             const newSymptomsSnapshot = symptomImages.filter(img => typeof img === "string");
 
             const filesToUpload = symptomImages.filter(img => typeof img !== "string") as File[];
@@ -169,7 +170,7 @@ export default function DiseaseEdit(){
                     const data = await response.json();
                 if(data.secure_url){
 
-                    setCover(data.secure_url)
+                    newCover =(data.secure_url)
                 }else{
                     console.error("Upload failed : ", data)
                 }
@@ -188,7 +189,7 @@ export default function DiseaseEdit(){
                 CommonName:diseaseName, 
                 DiseaseDevelopment:diseaseDevelopment,
                 MethodsOfDispersal:methodOfDispersal,
-                DiseaseSnapshot:cover,
+                DiseaseSnapshot:newCover,
                 DamageSymptoms:symptomsData,
                 ControlMeasures:controlMeasures
             }
@@ -325,7 +326,7 @@ export default function DiseaseEdit(){
                         <ArrowBackIcon sx={{fontSize:30,marginTop:0,marginBottom:0}}/>
                         <span className="backText_ArticleEdit">Return</span>
                     </div>
-                    <Button variant="contained"  sx={{marginLeft:'auto'}} onClick={() =>setOpenDeleteConfirm(true)}>Delete Article</Button>
+                    <Button variant="contained"  sx={{marginLeft:'auto',backgroundColor:'red'}} onClick={() =>setOpenDeleteConfirm(true)}>Delete Article</Button>
                     <Button variant="contained" onClick={saveEdit} sx={{marginLeft:'5px'}}>Save Edited Article</Button>
 
             </div>

@@ -11,6 +11,7 @@ import Alert from '@mui/material/Alert';
 import {db} from '../../../firebaseconfig';
 import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 interface contentsInt{
     id: number,
@@ -21,13 +22,21 @@ interface contentsInt{
 
 export default function ArticleUpload(){
 
-
+    const navigate = useNavigate()
     const [contents,setContents] = React.useState<contentsInt[]>([]);
     const [cover, setCover] = React.useState<File | null>(null);
     const [title,setTitle] = React.useState<string>("");
     const [alert, setAlert] = React.useState<{ type: 'success' | 'error', message: string } | null>(null);
 
-
+    const extractKeywords = (text: string): string[] => {
+        return text
+          .toLowerCase()
+          .replace(/[^\w\s]/gi, '') // remove punctuation
+          .split(/\s+/)
+          .filter((word, index, self) =>
+            word.length > 1 && self.indexOf(word) === index
+          );
+      };
     const uploadArticle = async(coverImg:File,title:string,contents:contentsInt[])=>{
 
 
@@ -67,6 +76,7 @@ export default function ArticleUpload(){
                 cover: data.secure_url,
                 contents: contents,
                 CreatedAt:Timestamp.now(),
+                keywords: extractKeywords(title)
             }
 
             const articleRef = await addDoc(collection(db,"Articles"),newArticle);
@@ -74,7 +84,7 @@ export default function ArticleUpload(){
             console.log("Image Uploaded!")
             console.log("New article object : ",newArticle)
             toast.success("Article uploaded successfully!");
-      
+            navigate("/admin/Article_management")
         }catch(err){
             console.error(err)
         }
@@ -177,9 +187,8 @@ export default function ArticleUpload(){
             })}
             <Button onClick={handleAddContent} className="createButton" sx={{ marginTop: '10px' }}>Create new content wrapper</Button>
 
-            <Button onClick={()=>console.log(contents)}>Check content wrappers</Button>
-            <Button onClick={()=>console.log(cover)}>Check Image content</Button>
-            <Button onClick={()=>uploadArticle(cover!,title,contents)}>Upload Test</Button>
+          
+            <Button onClick={()=>uploadArticle(cover!,title,contents)} variant='contained'>Upload Test</Button>
         </div>
     </>
     

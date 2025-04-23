@@ -1,8 +1,8 @@
 
 
 .mainWrapper_PestUpload{
-    width: 74vw;
-    border: 1px solid;
+    width: 80vw;
+    border: 0px solid;
     margin-left: 'auto';
     min-height: 100%;
     height: fit-content;
@@ -27,7 +27,7 @@
     height: fit-content;
     border-radius: 10px;
 
-    border: 1px solid red;
+    border: 1px solid rgb(93, 93, 93);
     margin-top: 20px;
     display: flex;
     flex-direction: column;
@@ -55,7 +55,7 @@
     width: 95%;
     padding-left: 3px;
     padding-right: 3px;
-    border: 1px solid rgb(0, 0, 0);
+    border: 0px solid rgb(0, 0, 0);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -67,7 +67,7 @@
 }
 
 .imageSelectorWrapper{
-    border: 1px solid red;
+    border: 0px solid red;
     background-color: rgb(0, 0, 0);
     width: 150px;
     height: 150px;

@@ -12,7 +12,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
+import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import { toast } from "react-toastify";
 
 interface contentsInt{
     id: number,
@@ -35,9 +36,20 @@ export default function ArticleEdit(){
     const {id} = useParams()
     const [articleData,setArticleData] = useState<articleType|null>(null)
     const [contents,setContents] = useState<contentsInt[]>([]);
-
+    const [cover,setCover]= useState<File | string>('');
+    const [keyWords,setKeyWords] = useState<string[]>([])
     const [title,setTitle] = useState<string>("")
 
+
+    const extractKeywords = (text: string): string[] => {
+        return text
+          .toLowerCase()
+          .replace(/[^\w\s]/gi, '') // remove punctuation
+          .split(/\s+/)
+          .filter((word, index, self) =>
+            word.length > 1 && self.indexOf(word) === index
+          );
+      };
 
     const [openConfirmation,setConfirmation] = useState(false)
 
@@ -65,7 +77,9 @@ export default function ArticleEdit(){
             console.log("Article deleted successfully");
     
             // Navigate back after deletion
-            navigate("/admin/article_management"); // or wherever you want to go after delete
+            toast.error("Article was deleted successfully");
+            navigate("/admin/Article_management")
+            console.log("Changes Made ! ") // or wherever you want to go after delete
         }catch(err){
             console.log(err)
         }
@@ -88,6 +102,9 @@ export default function ArticleEdit(){
                     setArticleData(articleSnap.data() as any)
                     setTitle(articleSnap.data().title)
                     setContents(articleSnap.data().contents)
+                    setCover(articleSnap.data().cover)
+                    console.log("keywords : ",articleSnap.data().keywords)
+                    setKeyWords(articleSnap.data().keywords)
                 }
             }catch(err){console.error(err)}
         }
@@ -103,12 +120,45 @@ export default function ArticleEdit(){
             console.log("Saving changes made........")
             const articleRef = doc(db,'Articles',id as string);
 
+            let newCover = cover;
+
+            if(cover&& typeof cover !== 'string'){
+
+                console.log("Uploading image change .........")
+                const formData = new FormData();
+                formData.append("file",cover);
+                formData.append("upload_preset","dishlyunsignedpreset")
+
+
+    
+                const response = await fetch(
+                    'https://api.cloudinary.com/v1_1/dvl7mqi2r/image/upload',
+                    {
+                        method:"POST",
+                        body: formData
+                    }
+                )
+                
+
+                const data = await response.json();
+                if(data.secure_url){
+                    console.log("Upload image success : ", data.secure_url)
+                    setCover(data.secure_url)
+                    newCover = data.secure_url
+                }else{
+                    console.error("Upload failed : ", data)
+                }
+            }
+
 
             await updateDoc(articleRef,{
                 title:title,
-                contents:contents
+                contents:contents,
+                cover:newCover,
+                keywords:extractKeywords(title)
             })
-
+            toast.success("Article data was updated successfully");
+            navigate("/admin/Article_management")
             console.log("Changes Made ! ")
         }catch(err){
             console.error(err)
@@ -126,14 +176,25 @@ export default function ArticleEdit(){
                         <ArrowBackIcon sx={{fontSize:30,marginTop:0,marginBottom:0}}/>
                         <span className="backText_ArticleEdit">Return</span>
                     </div>
-                    <Button variant="contained" onClick={deleteArticle} sx={{marginLeft:'auto'}}>Delete Article</Button>
+                    <Button variant="contained" onClick={deleteArticle} sx={{marginLeft:'auto',backgroundColor:'red'}}>Delete Article</Button>
                     <Button variant="contained" onClick={saveEdit} sx={{marginLeft:'5px'}}>Save Edited Article</Button>
 
                 </div>
 
                 <div className="thumbnailWrapper">
 
-                    <img src={articleData?.cover} alt="" className="coverImage" />
+                    <img src={typeof cover === 'string' ? cover : URL.createObjectURL(cover)} alt="" className="coverImage_cropUpload" />
+
+                    <div className="uploadButtonWrapper">
+
+                        <input type="file" id="cover" style={{display: "none"}} onChange={(e) => {
+                                if (e.target.files && e.target.files.length > 0) {
+                                setCover(e.target.files[0]);
+                                }
+                            }}/>
+
+                        <label htmlFor="cover"><InsertPhotoIcon style={{color:"white", fontSize:"70px",  cursor:"pointer"}}/></label>
+                    </div>
 
 
                 </div>
@@ -195,8 +256,7 @@ export default function ArticleEdit(){
                 
 
                 <Button onClick={handleAddContent} className="createButton" sx={{ marginTop: '10px' }}>Create new content wrapper</Button>
-                <Button onClick={()=> console.log("Current Contents : ",contents)}>Test Contents</Button>
-
+               
 
 
 

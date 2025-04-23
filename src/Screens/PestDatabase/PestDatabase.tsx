@@ -79,9 +79,7 @@ export default function PestDatabase() {
                     <div className="headerWrapper_PestDb">
                         <Button variant="contained" onClick={navigateToPestUpload} >Create New Pest Data</Button>
 
-                        <div className="searchWrapper">
-                            <input type="text" placeholder="Search" />
-                        </div>
+   
                     </div>
 
 

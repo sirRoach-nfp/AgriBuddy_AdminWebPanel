@@ -80,7 +80,7 @@ export default function Adminlayout(){
             </Drawer>
 
             {/* Main Content */}
-            <Box component="main" sx={{ flexGrow: 1, p: 2, border: '1px solid green', flex: 1 }}>
+            <Box component="main" sx={{ flexGrow: 1, p: 2, border: '0px solid green', flex: 1 }}>
               <Outlet />
             </Box>
           </Box>

@@ -67,9 +67,7 @@ export default function DiseaseDatabase(){
             <div className="headerWrapper_diseaseDB">
                 <Button variant="contained" onClick={navigateToDiseaseUpload}>Create New Disease Data</Button>
 
-                <div className="searchWrapper">
-                    <input type="text" placeholder="Search" />
-                </div>
+     
             </div>
 
 
