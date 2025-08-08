@@ -17,6 +17,7 @@ export default function CropCard({cropId,cropName,cropScientificName,cropCoverIm
     return(
 
         <div className="CropCardWrapper" onClick={navigateToCropEdit}>
+            
             <div className="thumbanailWrapper">
                 <img src={cropCoverImage} alt="" className="thumbnail" />
             </div>
@@ -26,9 +27,6 @@ export default function CropCard({cropId,cropName,cropScientificName,cropCoverIm
                 <h4 className="titleTag">{cropName}</h4>
             </div>
 
-            <div className="editWrapper">
-
-            </div>
         </div>
     )
 }

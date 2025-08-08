@@ -74,19 +74,54 @@ export default function PestDatabase() {
     return(
         <>
         
-            <div className="mainWrapper_PestDb">
+            <div className="mainWrapper">
                 
                     <div className="headerWrapper_PestDb">
-                        <Button variant="contained" onClick={navigateToPestUpload} >Create New Pest Data</Button>
-
-   
+                       
+                        <p className="headerSection__primary">Pest Database</p>
+                        <span className="headerSection__secondary">Manage your crop data</span>
+                        <hr />
                     </div>
 
 
 
                     <div className="contentWrapper_PestDb">
+                        <div className="filterWrapper">
+                                                <Button sx={{backgroundColor:'#607D8B',height: '40px',}}  variant="contained" onClick={navigateToPestUpload}>Create New Crop Data</Button>
 
-                        <div className="pestCardsWrapper_PestDb">
+
+
+                            <div className="filterWrapper__searchWrapper">
+                                <TextField 
+                                    variant="outlined"
+                                    label="Search"
+                                    fullWidth
+                                    sx={{
+                                        flex: '1 1 200px',
+                                        '& .MuiInputBase-root': {
+                                        height: '40px',
+                                        boxSizing: 'border-box',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        padding: '0 14px',
+                                        },
+                                        '& .MuiInputBase-input': {
+                                        padding: 0,
+                                        height: '100%',
+                                        boxSizing: 'border-box',
+                                        },
+                                        '& .MuiInputLabel-root': {
+                                        top: '-6px',
+                                        },
+                                        '& label.Mui-focused': {
+                                        top: 0,
+                                        },
+                                    }} />
+                                
+
+                            </div>
+                        </div>            
+                        <div className="articleCardsWrapper">
                             
                             {pests.map((pest,index)=>(
                                 <PestCard CommonName={pest.CommonName} PestDocuId={pest.PestId} PestSnapshot={pest.PestSnapshot}ScientificName={pest.ScientificName}/>

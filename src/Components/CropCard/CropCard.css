@@ -5,7 +5,7 @@
     
     padding: 10px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 5px;
     border-radius: 5px;
     border-radius: 10px;

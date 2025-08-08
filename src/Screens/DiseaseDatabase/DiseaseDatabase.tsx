@@ -65,17 +65,52 @@ export default function DiseaseDatabase(){
         <div className="mainWrapper">
 
             <div className="headerWrapper_diseaseDB">
-                <Button variant="contained" onClick={navigateToDiseaseUpload}>Create New Disease Data</Button>
-
+                
+                <p className="headerSection__primary">Disease Database</p>
+                <span className="headerSection__secondary">Manage your disease database</span>
+                <hr />
      
             </div>
 
 
 
             <div className="contentWrapper_diseaseDB">
+                    <div className="filterWrapper">
+                        <Button sx={{backgroundColor:'#607D8B',height: '40px',}}  variant="contained" onClick={navigateToDiseaseUpload}>Create New Crop Data</Button>
 
 
-                <div className="cropCardsWrapper_diseaseDB">
+
+                        <div className="filterWrapper__searchWrapper">
+                            <TextField 
+                                variant="outlined"
+                                label="Search"
+                                fullWidth
+                                sx={{
+                                    flex: '1 1 200px',
+                                    '& .MuiInputBase-root': {
+                                    height: '40px',
+                                    boxSizing: 'border-box',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    padding: '0 14px',
+                                    },
+                                    '& .MuiInputBase-input': {
+                                    padding: 0,
+                                    height: '100%',
+                                    boxSizing: 'border-box',
+                                    },
+                                    '& .MuiInputLabel-root': {
+                                    top: '-6px',
+                                    },
+                                    '& label.Mui-focused': {
+                                    top: 0,
+                                    },
+                                }} />
+                            
+
+                        </div>
+                    </div>            
+                <div className="articleCardsWrapper">
 
                     {diseases!.map((disease,index)=>(
 

@@ -2,6 +2,7 @@ import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import './ArticleUpload.css'
+import '../../../global.css'
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import TextField from '@mui/material/TextField';
@@ -112,7 +113,9 @@ export default function ArticleUpload(){
     <>
 
         <div className="mainWrapper">
+
           
+
 
             <div className="thumbnailWrapper">
 
@@ -132,7 +135,7 @@ export default function ArticleUpload(){
             </div>
 
 
-            <TextField value={title} onChange={(e)=>setTitle(e.target.value)} sx={{marginTop:'30px',fontSize:'30px'}} id="standard-basic" label="Article Title....." variant="standard" />
+            <TextField value={title} onChange={(e)=>setTitle(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Article Title....." variant="standard" />
 
 
 
@@ -142,7 +145,7 @@ export default function ArticleUpload(){
 
                     <div className="contentWrapper">
                         <div className="contentWrapperHeaderWrapper">
-                            <RemoveCircleIcon sx={{fontSize: 30}} onClick={() => handleRemoveContent(index)}/>
+                            <RemoveCircleIcon sx={{fontSize: 30,color:'red'}} onClick={() => handleRemoveContent(index)}/>
                         </div>
 
                         <TextField style={{width:'95%'}} value={content.header}  id="standard-basic" label="Article Title" variant="standard"
@@ -185,10 +188,14 @@ export default function ArticleUpload(){
                     </div>
                 )
             })}
-            <Button onClick={handleAddContent} className="createButton" sx={{ marginTop: '10px' }}>Create new content wrapper</Button>
 
-          
-            <Button onClick={()=>uploadArticle(cover!,title,contents)} variant='contained'>Upload Test</Button>
+            <div className="editUploadButtonWrapper">
+                <Button onClick={handleAddContent} className="createButton" sx={{ }}>Create new content wrapper</Button>
+
+            
+                <Button onClick={()=>uploadArticle(cover!,title,contents)} sx={{backgroundColor:' #607D8B', width:'fit-content'}} variant='contained'>Upload Article</Button>
+            </div>
+
         </div>
     </>
     

@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import './ArticleManagement.css'
@@ -9,7 +9,12 @@ import { Outlet } from 'react-router-dom';
 import { db } from '../../firebaseconfig';
 import { collection, getDocs } from 'firebase/firestore';
 
+//MUI imports
 
+import TextField from '@mui/material/TextField';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import { FormControl, InputLabel, Select, MenuItem, Box } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
 
 
 
@@ -25,7 +30,8 @@ interface articleType{
     Title:string,
     Cover:string,
     CreatedAt:any,
-    Id:string
+    Id:string,
+    PreviewContext:string,
     
 }
 
@@ -33,7 +39,7 @@ interface articleType{
 export default function ArticleManagement() {
 
     const navigate = useNavigate()
-    const [selectedOption, setSelectedOption] = React.useState('');
+    const [selectedOption, setSelectedOption] = React.useState('Date');
     const [articles,setArticles] = React.useState<articleType[]>([])
 
 
@@ -55,7 +61,8 @@ export default function ArticleManagement() {
                         Title:doc.data().title || "",
                         Cover:doc.data().cover || "",
                         CreatedAt:doc.data().CreatedAt || 0,
-                        Id: doc.id
+                        Id: doc.id,
+                        PreviewContext:doc.data().contents[0].content,
 
                     }))
                     setArticles(rawData)
@@ -87,8 +94,11 @@ export default function ArticleManagement() {
             <div className="mainWrapper">
 
                 <div className="headerWrapper">
-                    <Button variant="contained" onClick={navigateToUpload}>Add Article</Button>
 
+                    <p className="headerSection__primary">Article Management</p>
+                    <span className="headerSection__secondary">Manage your articles</span>
+                    <hr />
+                   
 
                 </div>
 
@@ -96,23 +106,68 @@ export default function ArticleManagement() {
                 <div className="contentWrapper">
 
                     <div className="filterWrapper">
-                        <h3 className="sortHeader">Sort By : </h3>
-                        <Select
-                        labelId="dropdown-label"
-                        value={selectedOption}
-                        label="Select Page"
-                        inputProps={{
-                            sx: {
-                              padding: '5px 14px', // adjust this to control the padding around the selected value
-                            },
-                          }}
-                        onChange={handleChange}>
+                        <Button sx={{backgroundColor:'#607D8B',height: '40px',}} variant="contained" onClick={navigateToUpload}>Add Article</Button>
 
-                            <MenuItem value="article" >Ascending</MenuItem>
-                            <MenuItem value="report">Descending</MenuItem>
-                   
 
-                        </Select>
+
+                        <div className="filterWrapper__searchWrapper">
+                            <TextField 
+                                variant="outlined"
+                                label="Search"
+                                fullWidth
+                                sx={{
+                                    flex: '1 1 200px',
+                                    '& .MuiInputBase-root': {
+                                    height: '40px',
+                                    boxSizing: 'border-box',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    padding: '0 14px',
+                                    },
+                                    '& .MuiInputBase-input': {
+                                    padding: 0,
+                                    height: '100%',
+                                    boxSizing: 'border-box',
+                                    },
+                                    '& .MuiInputLabel-root': {
+                                    top: '-6px',
+                                    },
+                                    '& label.Mui-focused': {
+                                    top: 0,
+                                    },
+                                }} />
+                            <Select
+                            labelId="dropdown-label"
+                            value={selectedOption}
+                            label="Select Page"
+                            inputProps={{
+                                sx: {
+                                
+                                padding: '7px 14px',
+                                
+                                // adjust this to control the padding around the selected value
+                                },
+                            }}
+                                sx={{
+                                height: '40px',
+                                minWidth: 120,
+                                '& .MuiSelect-select': {
+                                    padding: '10px 14px',
+                                },
+                                }}
+                            onChange={handleChange}>
+
+                                <MenuItem value="Date" >Date</MenuItem>
+                                <MenuItem value="Title">Title</MenuItem>
+                                <MenuItem value="Author">Author</MenuItem>
+                            
+                    
+
+                            </Select>
+
+                        </div>
+
+
                     </div>
 
                     <div className="articleCardsWrapper">
@@ -121,7 +176,7 @@ export default function ArticleManagement() {
                         {articles && articles.length >0 && articles.map((article,index)=>(
 
 
-                            <ArticleCard Id={article.Id} Title={article.Title} Cover={article.Cover} CreatedAt={article.CreatedAt}/>
+                            <ArticleCard Id={article.Id} Title={article.Title} Cover={article.Cover} CreatedAt={article.CreatedAt} PreviewContext={article.PreviewContext}/>
 
                         ))}
       

@@ -27,6 +27,9 @@ import { TransitionProps } from '@mui/material/transitions';
 
 
 
+import { Worm } from 'lucide-react';
+
+
 export default function DiseaseEdit(){    
 
     const navigate = useNavigate();
@@ -318,22 +321,31 @@ export default function DiseaseEdit(){
         <>
         {updateDialog()}
         {deleteDialog()}
-         <div className="mainWrapper_DiseaseEdit">
+         <div className="mainWrapper">
 
             <div className="headerWrapper_ArticleEdit">
 
-                    <div className="backWrapper_ArticleEdit">
-                        <ArrowBackIcon sx={{fontSize:30,marginTop:0,marginBottom:0}}/>
-                        <span className="backText_ArticleEdit">Return</span>
+                <div className="headerWrapper_info">
+
+                        <Worm/>
+                        <div className="headerWrapper_info_text">
+                            
+                            <p className="headerWrapper_info_text_primary">Disease Editor</p>
+                            <span className="headerWrapper_info_text_secondary">Edit and manage your disease data</span>
+                        </div>
                     </div>
-                    <Button variant="contained"  sx={{marginLeft:'auto',backgroundColor:'red'}} onClick={() =>setOpenDeleteConfirm(true)}>Delete Article</Button>
-                    <Button variant="contained" onClick={saveEdit} sx={{marginLeft:'5px'}}>Save Edited Article</Button>
+                <div className="headerWrapper_ArticleEdit_buttonWrappers">
+
+                    <Button variant="contained"  sx={{height:'40px',backgroundColor:'red'}} onClick={() =>setOpenDeleteConfirm(true)}>Delete Article</Button>
+                    <Button variant="contained" onClick={saveEdit} sx={{height:'40px',backgroundColor:'#607D8B'}}>Save Edited Article</Button>
+                </div>
+
 
             </div>
 
 
 
-                <div className="thumbnailWrapper_DiseaseEdit">
+                <div className="thumbnailWrapper">
 
                     <img src={typeof cover === 'string' ? cover : URL.createObjectURL(cover)} alt="" className="coverImage_DiseaseUpload" />
 
@@ -350,7 +362,7 @@ export default function DiseaseEdit(){
 
                 </div>
 
-                <TextField value={diseaseName} onChange={(e)=>setDiseaseName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px'}} id="standard-basic" label="Disease Name....." variant="standard" />
+                <TextField value={diseaseName} onChange={(e)=>setDiseaseName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Disease Name....." variant="standard" />
                
 
                 <div className="contentWrapper">

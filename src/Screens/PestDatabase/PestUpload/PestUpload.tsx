@@ -206,11 +206,11 @@ export default function PestUpload(){
         <>  
 
         {uploadDialog()}
-            <div className="mainWrapper_PestUpload">
+            <div className="mainWrapper">
 
 
 
-                <div className="thumbnailWrapper_PestUpload">
+                <div className="thumbnailWrapper">
 
                     <img src={cover ? URL.createObjectURL(cover) : ""} alt="" className="coverImage_pestUpload" />
 
@@ -227,8 +227,8 @@ export default function PestUpload(){
 
                 </div>
 
-                <TextField value={pestName} onChange={(e)=>setPestName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px'}} id="standard-basic" label="Pest Name....." variant="standard" />
-                <TextField value={scientificName} onChange={(e)=>setScientificName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px'}} id="standard-basic" label="Scientific Name....." variant="standard" />
+                <TextField value={pestName} onChange={(e)=>setPestName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Pest Name....." variant="standard" />
+                <TextField value={scientificName} onChange={(e)=>setScientificName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Scientific Name....." variant="standard" />
 
 
 

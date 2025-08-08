@@ -8,6 +8,12 @@ body, html, #root {
   height: 100%;
   width: 100%;
 }
+
+hr{
+  color: #213547;
+  width: 100%;
+  margin: 0.50rem 0rem;
+}
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -22,6 +28,16 @@ body, html, #root {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+
+  --fs-section-title: clamp(1.5rem, 2vw + 0.5rem, 2rem);
+  --fs-card-title: clamp(1.125rem, 1.5vw + 0.2rem, 1.5rem);
+  --fs-card-secondary: clamp(0.875rem, 1vw + 0.25rem, 1rem);
+  --fs-card-meta:clamp(0.75rem, 0.7vw + 0.25rem, 0.875rem);
+  --fs-nav-link: clamp(0.875rem, 0.8vw + 0.3rem, 1rem);
+  --fs-body: clamp(0.9375rem, 1vw + 0.2rem, 1rem);
+
+
 }
 .root{
   padding: 0;
@@ -46,6 +62,10 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+p{
+  color: #475569;
 }
 
 button {

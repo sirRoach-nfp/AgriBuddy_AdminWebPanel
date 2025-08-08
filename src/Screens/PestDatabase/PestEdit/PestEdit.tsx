@@ -18,7 +18,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
+//icon import
 
+import { Bug } from 'lucide-react';
 
 
 export default function PestEdit(){
@@ -469,22 +471,30 @@ export default function PestEdit(){
 
         {updateDialog()}
         {deleteDialog()}
-            <div className="mainWrapper_PestUpload">
+            <div className="mainWrapper">
 
                 <div className="headerWrapper_ArticleEdit">
+                    <div className="headerWrapper_info">
 
-                    <div className="backWrapper_ArticleEdit">
-                        <ArrowBackIcon sx={{fontSize:30,marginTop:0,marginBottom:0}}/>
-                        <span className="backText_ArticleEdit">Return</span>
+                        <Bug/>
+                        <div className="headerWrapper_info_text">
+                            
+                            <p className="headerWrapper_info_text_primary">Article Editor</p>
+                            <span className="headerWrapper_info_text_secondary">Edit and manage your content</span>
+                        </div>
                     </div>
-                    <Button variant="contained"  onClick={()=>setOpenDeleteConfirm(true)} sx={{marginLeft:'auto',backgroundColor:'red'}}>Delete Article</Button>
-                    <Button variant="contained" onClick={()=>setOpenUpdateConfirm(true)} sx={{marginLeft:'5px'}}>Save Edited Article</Button>
+
+                    <div className="headerWrapper_ArticleEdit_buttonWrappers">
+                        <Button variant="contained"  onClick={()=>setOpenDeleteConfirm(true)} sx={{height:'40px',backgroundColor:'red'}}>Delete Article</Button>
+                        <Button variant="contained" onClick={()=>setOpenUpdateConfirm(true)} sx={{height:'40px'}}>Save Edited Article</Button>
+                    </div>
+
 
                 </div>
 
 
 
-                <div className="thumbnailWrapper_PestUpload">
+                <div className="thumbnailWrapper">
 
                     <img src={typeof cover === 'string' ? cover : URL.createObjectURL(cover)} alt="" className="coverImage_pestUpload" />
 
@@ -501,8 +511,8 @@ export default function PestEdit(){
 
                 </div>
 
-                <TextField value={pestName} onChange={(e)=>setPestName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px'}} id="standard-basic" label="Pest Name....." variant="standard" />
-                <TextField value={scientificName} onChange={(e)=>setScientificName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px'}} id="standard-basic" label="Scientific Name....." variant="standard" />
+                <TextField value={pestName} onChange={(e)=>setPestName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Pest Name....." variant="standard" />
+                <TextField value={scientificName} onChange={(e)=>setScientificName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Scientific Name....." variant="standard" />
 
 
 

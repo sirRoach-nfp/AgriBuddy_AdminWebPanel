@@ -2,7 +2,9 @@
 
 .headerWrapper_diseaseDB{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content:start;
+    align-items: start;
     border: 0px solid red;
 }
 

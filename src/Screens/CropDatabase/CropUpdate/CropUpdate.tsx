@@ -22,6 +22,9 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 
 
+//icon import
+import { Sprout } from "lucide-react";
+
 interface contentsInt{
     id: number,
     header:string,
@@ -468,19 +471,27 @@ export default function CropUpdate(){
 
 
             <div className="headerWrapper_ArticleEdit">
+                    <div className="headerWrapper_info">
 
-                    <div className="backWrapper_ArticleEdit">
-                        <ArrowBackIcon sx={{fontSize:30,marginTop:0,marginBottom:0}}/>
-                        <span className="backText_ArticleEdit">Return</span>
+                        < Sprout/>
+                        <div className="headerWrapper_info_text">
+                            
+                            <p className="headerWrapper_info_text_primary">Crop Data Editor</p>
+                            <span className="headerWrapper_info_text_secondary">Edit and manage crop data</span>
+                        </div>
                     </div>
-                    <Button variant="contained"  sx={{marginLeft:'auto', backgroundColor:'red'}} onClick={()=>setOpenDeleteConfirm(true)}>Delete Crop Data</Button>
-                    <Button variant="contained"  sx={{marginLeft:'5px'}} onClick={()=>setOpenUpdateConfirm(true)}>Save Changes</Button>
+
+
+                    <div className="headerWrapper_ArticleEdit_buttonWrappers">
+                        <Button variant="contained"  sx={{height:'40px', backgroundColor:'red'}} onClick={()=>setOpenDeleteConfirm(true)}>Delete Crop Data</Button>
+                        <Button variant="contained"  sx={{height:'40px',backgroundColor:'#607D8B'}} onClick={()=>setOpenUpdateConfirm(true)}>Save Changes</Button>
+                    </div>
 
             </div>
 
 
 
-            <div className="thumbnailWrapper_cropUpload">
+            <div className="thumbnailWrapper">
 
                 <img src={typeof cover === 'string' ? cover : URL.createObjectURL(cover)} alt="" className="coverImage_cropUpload" />
 

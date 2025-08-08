@@ -1,33 +1,87 @@
-.mainWrapper{
+
+
+@media(min-width:325px){
     
-    width: 80vw;
 
-    margin-left: 'auto';
-    min-height: 100%;
-    height: fit-content;
+    .headerWrapper_ArticleEdit{
+        width: 100%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border: 1px  red;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 0.5rem;
+    }
+
+    .backText_ArticleEdit{
+        margin-left: 10px;
+    }
+
+    .backWrapper_ArticleEdit{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    
+        padding-left: 15px;
+        padding-right: 15px;
+        justify-content: center;
+    }
+
+
+    .headerWrapper_info{
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        gap: 0.25rem;
+    }
+
+    .headerWrapper_info_text_primary{
+        font-size: var(--fs-edit-header-primary);
+        font-weight: 700;
+        color: #37474F;
+    }
+
+    .headerWrapper_info_text_secondary{
+        font-size: 0.75rem;
+    }
+    .headerWrapper_info_text{
+        border: 1px  red;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+
+    }
+
+
+
+    .headerWrapper_ArticleEdit_buttonWrappers{
+        border: 1px  red;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 0.5rem;
+    }
+
 }
 
+@media(min-width:768px){
+    .headerWrapper_ArticleEdit{
+        width: 100%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border: 1px  red;
+        display: flex;
+        flex-direction: row;
+        align-items: start;
+       justify-content: space-between;
+    }
 
-.headerWrapper_ArticleEdit{
-    width: 100%;
-    padding-top: 10px;
-    padding-bottom: 10px;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-.backText_ArticleEdit{
-    margin-left: 10px;
-}
-
-.backWrapper_ArticleEdit{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  
-    padding-left: 15px;
-    padding-right: 15px;
-    justify-content: center;
+    .headerWrapper_ArticleEdit_buttonWrappers{
+        border: 1px  red;
+        display: flex;
+        flex-direction: row;
+        align-items: start;
+        gap: 0.5rem;
+    }
 }

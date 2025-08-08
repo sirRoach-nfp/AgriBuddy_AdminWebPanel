@@ -6,12 +6,13 @@ interface articleCardProps{
     Title:string,
     Cover:string,
     CreatedAt:any
-    Id:string
+    Id:string,
+    PreviewContext:string
 }
 
 
 
-export default function ArticleCard({Title,Cover,CreatedAt,Id}:articleCardProps){
+export default function ArticleCard({Title,Cover,CreatedAt,Id,PreviewContext}:articleCardProps){
 
 
     const navigate = useNavigate()
@@ -41,8 +42,9 @@ export default function ArticleCard({Title,Cover,CreatedAt,Id}:articleCardProps)
                 <h4 className="titleTag">{Title}</h4>
             </div>
 
-            <div className="editWrapper">
 
+            <div className="previewContextWrapper">
+                <p id="contextPreview">{PreviewContext}</p>
             </div>
         </div>
     )

@@ -205,11 +205,11 @@ export default function DiseaseUpload(){
     return(
         <>
         {uploadDialog()}
-         <div className="mainWrapper_DiseaseUpload">
+         <div className="mainWrapper">
 
 
 
-                <div className="thumbnailWrapper_DiseaseUpload">
+                <div className="thumbnailWrapper">
 
                     <img src={cover ? URL.createObjectURL(cover) : ""} alt="" className="coverImage_DiseaseUpload" />
 
@@ -226,7 +226,7 @@ export default function DiseaseUpload(){
 
                 </div>
 
-                <TextField value={diseaseName} onChange={(e)=>setDiseaseName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px'}} id="standard-basic" label="Disease Name....." variant="standard" />
+                <TextField value={diseaseName} onChange={(e)=>setDiseaseName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Disease Name....." variant="standard" />
                
 
                     

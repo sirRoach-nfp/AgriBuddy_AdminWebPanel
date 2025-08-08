@@ -7,7 +7,7 @@ import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import TextField from '@mui/material/TextField';
 import './CropUpload.css'
 import { ChangeEvent, useEffect, useState } from 'react';
-
+import '../../../global.css'
 import './CropUpload.css'
 import Button from '@mui/material/Button';
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
@@ -348,10 +348,10 @@ export default function CropUpload(){
     return(
         <>
         {uploadDialog()}
-        <div className="mainWrapper_cropUpload">
+        <div className="mainWrapper">
 
 
-            <div className="thumbnailWrapper_cropUpload">
+            <div className="thumbnailWrapper">
 
                 <img src={cover ? URL.createObjectURL(cover) : ""} alt="" className="coverImage_cropUpload" />
 
@@ -371,12 +371,12 @@ export default function CropUpload(){
 
 
 
-            <TextField value={cropName} onChange={(e)=>setCropName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px'}} id="standard-basic" label="Crop Name....." variant="standard" />
-            <TextField value={scientificName} onChange={(e)=>setScientificName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px'}} id="standard-basic" label="Scientific Name....." variant="standard" />
-            <TextField value={family} onChange={(e)=>setFamily(e.target.value)} sx={{marginTop:'30px',fontSize:'30px'}} id="standard-basic" label="Crop Family....." variant="standard" />
-            <TextField value={growthTime} onChange={(e)=>setGrowthTime(e.target.value)} sx={{marginTop:'30px',fontSize:'30px'}} id="standard-basic" label="Growth Time....." variant="standard" />
-            <TextField value={bestSeason} onChange={(e)=>setBestSeason(e.target.value)} sx={{marginTop:'30px',fontSize:'30px'}} id="standard-basic" label="Best Season....." variant="standard" />
-            <TextField value={soilPh} onChange={(e)=>setSoilPh(e.target.value)} sx={{marginTop:'30px',fontSize:'30px'}} id="standard-basic" label="Soil PH....." variant="standard" />
+            <TextField value={cropName} onChange={(e)=>setCropName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Crop Name....." variant="standard" />
+            <TextField value={scientificName} onChange={(e)=>setScientificName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Scientific Name....." variant="standard" />
+            <TextField value={family} onChange={(e)=>setFamily(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Crop Family....." variant="standard" />
+            <TextField value={growthTime} onChange={(e)=>setGrowthTime(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Growth Time....." variant="standard" />
+            <TextField value={bestSeason} onChange={(e)=>setBestSeason(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Best Season....." variant="standard" />
+            <TextField value={soilPh} onChange={(e)=>setSoilPh(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Soil PH....." variant="standard" />
             
             
             <div className="pestSelectionWrapper">

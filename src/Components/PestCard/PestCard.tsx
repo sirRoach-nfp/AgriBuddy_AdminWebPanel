@@ -35,9 +35,7 @@ export default function PestCard({CommonName,PestSnapshot,PestDocuId,ScientificN
                 <h4 className="titleTag">{CommonName}</h4>
             </div>
 
-            <div className="editWrapper">
-
-            </div>
+     
     </div>
         
     

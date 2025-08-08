@@ -25,9 +25,6 @@ export default function DiseaseCard({DiseaseId,DiseaseName,DiseaseSnapshot}:dise
                 <h4 className="titleTag">{DiseaseName}</h4>
             </div>
 
-            <div className="editWrapper">
-
-            </div>
         </div>
         </>
     )

@@ -3,9 +3,9 @@
 .DiseaseCardWrapper{
     height: fit-content;
     border: 0px solid rgb(216, 38, 38);
-    padding: 5px;
+    padding: 1rem;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     border-radius: 5px;
     border-radius: 10px;
     background: #ffffff;

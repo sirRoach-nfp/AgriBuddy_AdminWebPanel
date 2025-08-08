@@ -1,59 +1,16 @@
-import * as React from 'react';
-import MenuIcon from '@mui/icons-material/Menu'; // MUI burger icon
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import { IconButton, useMediaQuery, useTheme } from '@mui/material';
-import { Outlet, useNavigate,useLocation } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
-import { auth } from './firebaseconfig';
-import { toast } from 'react-toastify';
+const Layout = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md')); // md = 960px, you can adjust to 'sm' if you want <768px
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-
-
-import { Wheat, Newspaper, Sprout, Bug, Worm,Flag } from 'lucide-react';
-
-
-
-export default function Adminlayout(){
-
-
-
-    const location=useLocation()
-    const currentPath = location.pathname.replace(/^\/admin\/?/, '');
-
-    const navigate = useNavigate();
-
-    const pages = [
-      { label: 'Article Management', path: 'article_management', icon:<Newspaper/> },
-      { label: 'Reported Content', path: 'reported_content', icon:<Flag/> },
-      { label: 'Crop Database', path: 'crop_database', icon:<Sprout/> },
-      { label: 'Pest Database', path: 'pest_database', icon:<Bug/> },
-      { label: 'Disease Database', path: 'disease_database', icon:<Worm/> },
-    ];
-
-
-
-    const theme=useTheme();
-    const isMobile =useMediaQuery(theme.breakpoints.down('sm'))
-    const [mobileOpen,setMobileOpen] = React.useState(false)
-    
-
-
-
-    const handleDrawerToggle = () => {
-      setMobileOpen(!mobileOpen)
-    }
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   const drawerWidth = 200;
-    const drawerContent = (
-      <>
+
+  const drawerContent = (
+    <>
       {/* Logo Section */}
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', alignItems: 'center', p: 2 }}>
         <div style={{ padding: '.75rem', backgroundColor: '#607D8B', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -64,7 +21,6 @@ export default function Adminlayout(){
           <span style={{ fontWeight: '400', fontSize: '0.75rem', color: '#64748B' }}>Admin Panel</span>
         </div>
       </Box>
-
 
       {/* Navigation Items */}
       <List>
@@ -95,10 +51,7 @@ export default function Adminlayout(){
         })}
       </List>
 
-
       <Divider />
-
-
 
       {/* Logout */}
       <Box sx={{ p: 2 }}>
@@ -116,20 +69,11 @@ export default function Adminlayout(){
           </ListItemButton>
         </ListItem>
       </Box>
+    </>
+  );
 
-
-
-
-
-      </>
-    )
-
-
-
-
-
-    return (
-      <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', minHeight: '100vh', width: '100%' }}>
+  return (
+    <Box sx={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', minHeight: '100vh', width: '100%' }}>
       {/* Burger Icon for Mobile */}
       {isMobile && (
         <Box sx={{ display: 'flex', p: 1, backgroundColor: '#607D8B' }}>
@@ -165,7 +109,7 @@ export default function Adminlayout(){
         component="main"
         sx={{
           flexGrow: 1,
-          p: 1,
+          p: 2,
           border: '0px solid green',
           flex: 1,
         }}
@@ -173,5 +117,5 @@ export default function Adminlayout(){
         <Outlet />
       </Box>
     </Box>
-      );
-}
+  );
+};

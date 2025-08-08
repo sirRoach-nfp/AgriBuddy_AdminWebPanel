@@ -1,4 +1,4 @@
-
+import '../../../global.css'
 import "./ArticleEdit.css"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useEffect, useState } from "react";
@@ -14,6 +14,12 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { toast } from "react-toastify";
+
+
+
+
+
+import {Flag, Newspaper } from 'lucide-react';
 
 interface contentsInt{
     id: number,
@@ -172,12 +178,24 @@ export default function ArticleEdit(){
 
                 <div className="headerWrapper_ArticleEdit">
 
-                    <div className="backWrapper_ArticleEdit">
-                        <ArrowBackIcon sx={{fontSize:30,marginTop:0,marginBottom:0}}/>
-                        <span className="backText_ArticleEdit">Return</span>
+
+
+                    <div className="headerWrapper_info">
+
+                        <Newspaper/>
+                        <div className="headerWrapper_info_text">
+                            
+                            <p className="headerWrapper_info_text_primary">Article Editor</p>
+                            <span className="headerWrapper_info_text_secondary">Edit and manage your content</span>
+                        </div>
                     </div>
-                    <Button variant="contained" onClick={deleteArticle} sx={{marginLeft:'auto',backgroundColor:'red'}}>Delete Article</Button>
-                    <Button variant="contained" onClick={saveEdit} sx={{marginLeft:'5px'}}>Save Edited Article</Button>
+
+                    <div className="headerWrapper_ArticleEdit_buttonWrappers">
+                        <Button variant="contained" onClick={saveEdit} sx={{height:'40px',backgroundColor:'#607D8B'}}>Save Edited Article</Button>
+                        <Button variant="contained" onClick={deleteArticle} sx={{backgroundColor:'red',height:'40px'}}>Delete Article</Button>
+                    </div>
+                    
+                    
 
                 </div>
 
