@@ -82,6 +82,7 @@ function App() {
             <Route path='disease_database' element={<DiseaseDatabase/>}/>
             <Route path='disease_upload' element={<DiseaseUpload/>}/>
             <Route path='disease_edit/:id' element={<DiseaseEdit/>}/>
+            
           </Route>
 
         </Routes>
