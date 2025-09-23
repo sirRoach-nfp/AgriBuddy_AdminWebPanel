@@ -27,6 +27,7 @@
     align-self: flex-start;
     padding: 3px 15px;
     border-radius: 15px;
+    border: 1px solid #558E6E;
 }
 
 .CropData{

@@ -2,14 +2,44 @@
 import { useEffect, useState } from "react"
 import "./ExpandedReport.css"
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
+import { useNavigate, useParams } from "react-router-dom"
+import { db } from "../../../firebaseconfig";
+import { deleteDoc, doc, getDoc, Timestamp } from "firebase/firestore";
+import { toast } from "react-toastify";
+
+
+
+
+interface reportData{
+  _id:string;
+   //retain thuis
+   documentId:string
+  CreatedAt: any;
+  _additionalInfo:string,
+  _author:string,
+  _contentBody:string,
+  _contentTitle:string,
+  _postRefId:string,
+  _replyRefId:string,
+  _reportReason:string,
+  _reportTitle:string,
+  _reportType:string,
+}
+
+
 
 
 
 export default function ExpandedReported(){
 
+    const {id} = useParams()
+    const navigate = useNavigate();
+
     const [contentBadge,setContentBadge] = useState("Comment")
     const [reasonBadge,setReasonBadge] = useState("Harassment")
 
+
+    const [reportDetails,setReportDetails] = useState<reportData | null>( null );
 
     //modal handlers
     const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
@@ -46,8 +76,8 @@ export default function ExpandedReported(){
     
     
             <DialogActions>
-                <Button onClick={() =>setOpenDeleteConfirm(false)}>Cancel Action</Button>
-                <Button>Continue</Button>
+                <Button >Cancel Action</Button>
+                <Button onClick={deleteReportedContent}>Continue</Button>
             </DialogActions>
             </Dialog>
     
@@ -79,11 +109,115 @@ export default function ExpandedReported(){
     
             <DialogActions>
                 <Button onClick={() =>setOpenCloseConfirm(false)}>Cancel Action</Button>
-                <Button>Continue</Button>
+                <Button onClick={closeReportedContent}>Continue</Button>
             </DialogActions>
             </Dialog>
     )
 
+
+    //helper
+    function formatFirestoreDate(timestamp: Timestamp): string {
+        if (!timestamp) return "";
+        console.log("raw timestamp : ",timestamp)
+        const date = timestamp.toDate(); // Convert Firestore Timestamp to JS Date
+        const options: Intl.DateTimeFormatOptions = {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+        };
+
+        return date.toLocaleDateString("en-US", options);
+    }
+
+    useEffect(() => {
+    const fetchReportInfo = async () => {
+        console.log("Fetching Document with an id of: ", id);
+
+        const docRef = doc(db, "Reports", id as string);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+        const data = docSnap.data() as Omit<reportData, "documentId">;
+        setReportDetails({
+            ...data,
+            documentId: docSnap.id,
+        });
+        } else {
+        console.log("No such document!");
+        }
+    };
+
+    fetchReportInfo();
+    }, [id]);
+
+
+    const deleteReportedContent = async() => {
+        console.log("Clicked")
+        setOpenCloseConfirm(false)
+
+        try{
+
+            if(!reportDetails){
+                console.error("No report details provided");
+                return;
+
+            }
+
+            if(reportDetails?._reportType === "Post"){
+
+                const postRef = doc(db,"Discussions",reportDetails._postRefId);
+                await deleteDoc(postRef);
+                console.log("Post deleted successfully")
+            } else if (reportDetails?._reportType === "Comment"){
+
+
+                const commentRef = doc(
+                    db,
+                    "Discussions",
+                    reportDetails?._postRefId,
+                    "Comments",
+                    reportDetails?._replyRefId
+                )
+
+                await deleteDoc(commentRef);
+                console.log("Comment deleted successfully.");
+            }
+
+
+            const reportRef = doc(db,"Reports",reportDetails?.documentId);
+            await deleteDoc(reportRef);
+            console.log("Report deleted successfully.")
+            toast.success("Content was deleted successfully");
+            navigate("/admin/reported_Content")
+
+        }catch(err){
+            console.error("Error deleting report content")
+            toast.error("An error occured while deleting the content. Please try again later");
+        }
+    }
+
+    const closeReportedContent = async() => {
+        console.log("Clicked")
+        setOpenDeleteConfirm(false)
+
+        try{
+
+            if(!reportDetails){
+                console.error("No report details provided");
+                return;
+            }
+
+            const reportRef = doc(db,"Reports",reportDetails?.documentId);
+            await deleteDoc(reportRef);
+            console.log("Report deleted successfully.")
+            toast.success("Content ticket was removed from the list");
+            navigate("/admin/reported_Content")
+
+        }catch(err){
+            console.error("Error deleting report content")
+            toast.error("An error occured while removing the content. Please try again later");
+        }
+    }
 
     return(
         
@@ -114,14 +248,14 @@ export default function ExpandedReported(){
                             <div className={contentBadge}>
 
                                 <span className="badgeText">
-                                    Content
+                                    {reportDetails?._reportType}
                                 </span>
                             </div>
 
 
                             <div className={contentBadge}>
                                 <span className="badgeText">
-                                    Harassment
+                                    {reportDetails?._reportReason}
                                 </span>
                             </div>
 
@@ -129,7 +263,7 @@ export default function ExpandedReported(){
 
                         <div className="metaInfo__wrapper__title">
                             <span className="contentTitle">
-                                Inappropriate Language in Crop Discussion
+                                {reportDetails?._reportTitle}
                             </span>
                         </div>
 
@@ -141,7 +275,7 @@ export default function ExpandedReported(){
                                 </span>
 
                                 <span className="meta__item__primary">
-                                    2024-01-15
+                                    {formatFirestoreDate(reportDetails?.CreatedAt)}
                                 </span>
                             </div>
 
@@ -152,7 +286,7 @@ export default function ExpandedReported(){
                                 </span>
 
                                 <span className="meta__item__primary">
-                                    Farmer_john_2024
+                                    {reportDetails?._author}
                                 </span>
                             </div>
 
@@ -180,13 +314,7 @@ export default function ExpandedReported(){
 
                         <div className="reportedContentWrapper__content">
                             <span className="content">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed 
-                                euismod, nunc sit amet dictum ullamcorper, sapien elit posuere
-                                neque, non condimentum nulla lacus nec justo. Integer gravida,
-                                justo nec suscipit mattis, enim magna dignissim nibh, et luctus 
-                                enim libero vel turpis. Quisque laoreet leo sit amet tellus   
-                                ultrices, vel imperdiet erat
-                                tincidunt. Duis non magna at risus pretium ultrices.
+                                {reportDetails?._additionalInfo}
                             </span>
                         </div>
                     </div>
@@ -200,13 +328,7 @@ export default function ExpandedReported(){
 
                         <div className="reportedContentWrapper__content">
                             <span className="content">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed 
-                                euismod, nunc sit amet dictum ullamcorper, sapien elit posuere
-                                neque, non condimentum nulla lacus nec justo. Integer gravida,
-                                justo nec suscipit mattis, enim magna dignissim nibh, et luctus 
-                                enim libero vel turpis. Quisque laoreet leo sit amet tellus   
-                                ultrices, vel imperdiet erat
-                                tincidunt. Duis non magna at risus pretium ultrices.
+                                {reportDetails?._contentBody}
 
                             </span>
                         </div>
@@ -253,6 +375,22 @@ export default function ExpandedReported(){
 
                     
                 </div>
+                <Button
+                    variant="outlined"
+                    style={{ width: "100%" }}
+                    sx={{
+                        mt: 0,
+                        backgroundColor:"transparent",
+                        color: "red",
+                        borderColor:'#e2e8f0',
+                        border: 1
+                    }}
+                    onClick={() => console.log("Report data : ",reportDetails)}
+                
+                
+                    >
+                    check Data
+                </Button>
 
 
                 

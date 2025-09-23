@@ -25,12 +25,17 @@ import ReportCard from '../../Components/ReportedCard/ReportCard';
 
 type ReportType = {
   reportId:string;
-  documentId: string;
-  contentId: string; // document id
-  contentType: string; // e.g. "Post", "Comment", "Crop Data"
-  reason: string;
-  //reporterId: string; 
-  createdAt: any;
+  documentId: string; //retain thuis
+  CreatedAt: any;
+  _additionalInfo:string,
+  _author:string,
+  _contentBody:string,
+  _contentTitle:string,
+  _postRefId:string,
+  _replyRefId:string,
+  _reportReason:string,
+  _reportTitle:string,
+  _reportType:string,
 };
 
 export default function ReportedContent(){
@@ -150,9 +155,9 @@ export default function ReportedContent(){
                                 }}
                             onChange={handleContent}>
                                 <MenuItem value="All">All</MenuItem>
-                                <MenuItem value="Harassment">Comment</MenuItem>
-                                <MenuItem value="FalseInfo">Post</MenuItem>
-                                <MenuItem value="InappropriateContent">Crop Data</MenuItem>
+                                <MenuItem value="Comment">Comment</MenuItem>
+                                <MenuItem value="Post">Post</MenuItem>
+                           
                             
                     
 
@@ -203,26 +208,36 @@ export default function ReportedContent(){
 
                 <div className="contentWrapper">
                     {loading && !reports.length ? (
-                    <p>Loading...</p>
+                        <p>Loading...</p>
                     ) : reports.length === 0 ? (
-                    <p>No reports found</p>
+                        <p>No reports found</p>
                     ) : (
-                        <ReportCard contentType="Comment" />
+                        reports.map((report) => (
+                        <ReportCard 
+                            key={report.reportId} 
+                            contentType={report._reportType} 
+                            reportReason={report._reportReason} 
+                            createdAt={report.CreatedAt}
+                            reportId={report.documentId}
+                            additionalInfo={report._additionalInfo}
+                            />
+                           
+                        ))
                     )}
 
                     {/* Pagination */}
                     {hasMore && !loading && (
-                    <Button
+                        <Button
                         onClick={() => fetchReports(true)}
                         sx={{ marginTop: "20px" }}
                         variant="contained"
-                    >
+                        >
                         Load More
-                    </Button>
+                        </Button>
                     )}
+
                     {loading && reports.length > 0 && <p>Loading more...</p>}
                 </div>
-
                 <Button
                         onClick={() => console.log(reports)}
                         sx={{ marginTop: "20px" }}

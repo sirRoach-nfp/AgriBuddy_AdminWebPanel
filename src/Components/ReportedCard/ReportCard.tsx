@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react"
 import "./ReportCard.css"
 import { useNavigate } from "react-router-dom"
+import { Timestamp } from "firebase/firestore"
 
 
 interface reportProps{
-   // reportId:string,
+    reportId:string,
     //contentReferenceId:string,
     contentType:string,
     //reason:string,
     //createdAt:any,
+    additionalInfo:string
+    createdAt:any,
+    reportReason:string,
 }
 
-export default function ReportCard({contentType}:reportProps) {
+export default function ReportCard({additionalInfo,createdAt,contentType,reportReason,reportId}:reportProps) {
 
 
     const [contentBadge,setContentBadge] = useState("")
@@ -40,15 +44,32 @@ export default function ReportCard({contentType}:reportProps) {
     const navigate = useNavigate()
 
     const navigateToDetailedReport = () => {
-        navigate(`/admin/reported_content/detailed/${"testId"}`)
+        navigate(`/admin/reported_content/detailed/${reportId}`)
     }
+
+
+    //helper
+
+    function formatFirestoreDate(timestamp: Timestamp): string {
+        if (!timestamp) return "";
+        console.log("raw timestamp : ",timestamp)
+        const date = timestamp.toDate(); // Convert Firestore Timestamp to JS Date
+        const options: Intl.DateTimeFormatOptions = {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+        };
+
+        return date.toLocaleDateString("en-US", options);
+    }
+
 
     return(
         <div className="reportCardWrapper" onClick={navigateToDetailedReport}>
             <div className={contentBadge}>
 
                 <span className="badgeText">
-                    Comment
+                    {contentType}
                 </span>
             </div>
 
@@ -59,7 +80,7 @@ export default function ReportCard({contentType}:reportProps) {
                 <div className="infoWrapper__reasonBadge">
 
                     <span className="infoWrapper__reasonBadge__text">
-                         Harassment
+                         {reportReason}
                     </span>
                    
                 </div>
@@ -72,14 +93,14 @@ export default function ReportCard({contentType}:reportProps) {
    
 
                 <span className="infoWrapper__info">
-                        2024-01-2025
+                        {formatFirestoreDate(createdAt)}
                 </span>
                    
             </div>
 
             <div className="excerpt">
                 <span className="excerpt__text">
-                    user posted offensive comments about organic farming practices...
+                   {additionalInfo}
                 </span>
             </div>
 
