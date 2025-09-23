@@ -1,0 +1,135 @@
+.contentWrapper__expanded{
+    border: 0px solid red;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.metaInfo__wrapper{
+    width: 100%;
+    padding: 20px 20px;
+    border: 1px solid #E2e8f0;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.Comment{
+    color: #5467A1;
+    background-color: #DBEDF7;
+    align-self: flex-start;
+    padding: 3px 15px;
+    border-radius: 15px;
+    border: 1px solid #5467A1;
+}
+
+.Post{
+    color:#558E6E;
+    background-color: #DBFFE9;
+    align-self: flex-start;
+    padding: 3px 15px;
+    border-radius: 15px;
+}
+
+.CropData{
+    background-color: #F7EAFE;
+    align-self: flex-start;
+    padding: 3px 15px;
+    border-radius: 15px;
+    color: #8C68B0;
+}
+.badgeText{
+    font-weight: 500;
+}
+
+.metaInfo__wrapper__types{
+    display: flex;
+    flex-direction: row;
+    border: 0px solid blue;
+    gap: 1rem;
+}
+
+.metaInfo__wrapper__title{
+    border: 0px solid red;
+    padding: 10px 0px;
+    display: flex;
+    flex-direction: row;
+}
+
+.contentTitle{
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.metaInfo__wrapper__meta{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    border: 0px solid green;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.meta__item{
+    display: flex;
+    flex-direction: column;
+    border: 0px solid red;
+    align-items: center;
+    
+ 
+}
+
+.meta__item__label{
+    color: #918589;
+    font-size: 1rem;
+    font-weight: 400;
+
+}
+
+.meta__item__primary{
+    font-weight: 500;
+}
+
+.reportedContentWrapper{
+    width: 100%;
+    border: 1px solid #E2e8f0;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.reportedContentWrapper .reportedContentWrapper__header{
+    display: flex;
+    flex-direction: row;
+    padding: 10px 0px;
+    
+}
+
+.reportedContentWrapper .reportedContentWrapper__header .header{
+    font-size: 1.15rem;
+    font-weight: 500;
+}
+
+.reportedContentWrapper__content{
+    width: 100%;
+    padding: 20px;
+    border: 1px solid #E2E8f0;
+    text-align: left;
+    border-radius: 10px;
+    background-color: #FBFBFB;
+}
+
+
+.buttonsWrapper{
+    width: 100%;
+    padding: 20px 20px;
+    border: 1px solid #E2E8f0;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}

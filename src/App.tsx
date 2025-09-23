@@ -28,6 +28,7 @@ import DiseaseEdit from './Screens/DiseaseDatabase/DiseaseEdit/DiseaseEdit';
 import CropUpdate from './Screens/CropDatabase/CropUpdate/CropUpdate';
 import AuthenticationScreen from './Screens/AuthenticationScreen/AuthenticationScreen';
 import ProtectedRoute from './Screens/ProtectedRoute';
+import ExpandedReported from './Screens/ReportedContent/ReportDetails/ExpandedReport';
 
 
 
@@ -73,6 +74,7 @@ function App() {
             <Route path='article_upload' element={<ArticleUpload />}/>
             <Route path='article_Edit/:id' element={<ArticleEdit/>}/>
             <Route path='reported_content' element={<ReportedContent />}/>
+            <Route path='reported_content/detailed/:id' element={<ExpandedReported />}/>
             <Route path='crop_database' element={<CropDatabase />}/>
             <Route path='crop_upload' element={<CropUpload/>}/>
             <Route path='crop_edit/:id' element={<CropUpdate/>}/>
