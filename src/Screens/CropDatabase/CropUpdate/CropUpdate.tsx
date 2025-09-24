@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import { ChangeEvent, forwardRef, useEffect, useState } from "react";
-
+import Select from "react-select";
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../../../firebaseconfig";
@@ -24,6 +24,7 @@ import { TransitionProps } from '@mui/material/transitions';
 
 //icon import
 import { Sprout } from "lucide-react";
+import { Box, FormControl, InputLabel,MenuItem,Select as MuiSelect  } from "@mui/material";
 
 interface contentsInt{
     id: number,
@@ -67,6 +68,22 @@ const soilTypes = [
     "Sandy Clay Loam"
   ];
 
+const months = [
+{ name: "January", value: 1 },
+{ name: "February", value: 2 },
+{ name: "March", value: 3 },
+{ name: "April", value: 4 },
+{ name: "May", value: 5 },
+{ name: "June", value: 6 },
+{ name: "July", value: 7 },
+{ name: "August", value: 8 },
+{ name: "September", value: 9 },
+{ name: "October", value: 10 },
+{ name: "November", value: 11 },
+{ name: "December", value: 12 },
+];
+
+
 //all pest data dummy
 export default function CropUpdate(){
 
@@ -78,14 +95,18 @@ export default function CropUpdate(){
 
     const [pestSelection,setPestSelection] = useState<Pest[]>([]);
     const[diseaseSelection,setDiseaseSelection] = useState<Disease[]>([]);
-
+    const [bestSeason, setBestSeason] = useState<{ start: number | "", end: number | "" }>({
+        start: "",
+        end: "",
+    });
 
     const [cover,setCover] = useState<File | string>('');
+    const [seedToHectare,setSeedToHectare] = useState<number>()
     const[cropName,setCropName] = useState("");
     const[scientificName,setScientificName] = useState("");
     const[family,setFamily] = useState("");
     const [growthTime,setGrowthTime] = useState("");
-    const[bestSeason,setBestSeason] = useState("");
+
     const[soilPh,setSoilPh] = useState("");
     const[soilType,setSoilType] = useState<string[]>([]);
 
@@ -179,6 +200,8 @@ export default function CropUpdate(){
                     setSelectedPests(docSnap.data().pests)
                     setContents(docSnap.data().contents)
                     setSoilType(docSnap.data().soilType)
+                    setBestSeason(docSnap.data().optimalSeason)
+                    setSeedToHectare(docSnap.data().seedRatio)
                 }
 
 
@@ -279,10 +302,7 @@ export default function CropUpdate(){
                 toast.error("Growth Time is required.");
                 return;
             }
-            else if(!bestSeason || bestSeason.length === 0){
-                toast.error("Season is required.");
-                return;
-            }
+   
             else if(!family || family.length === 0){
                 toast.error("Plant Family is required.");
                 return;
@@ -297,6 +317,12 @@ export default function CropUpdate(){
             }
             else if(contents.length === 0){
                 toast.error("Contents cannot be empty");
+                return;
+            }else if (!seedToHectare || seedToHectare < 0) {
+                toast.error("Seed to hectare ratio is required.");
+                return;
+            }else if (!bestSeason){
+                toast.error("Optimal season range is required.");
                 return;
             }
             else if(selectedDiseases.length === 0){
@@ -351,7 +377,9 @@ export default function CropUpdate(){
                 pests:selectedPests,
                 diseases:selectedDiseases,
                 contents:contents,
-                soilType:soilType
+                soilType:soilType,
+                optimalSeason:bestSeason,
+                seedRatio:seedToHectare,
             }
             console.log("Updated Crop : ", UpdatedCrop)
 
@@ -513,9 +541,52 @@ export default function CropUpdate(){
         <TextField value={scientificName} onChange={(e)=>setScientificName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Scientific Name....." variant="standard" />
         <TextField value={family} onChange={(e)=>setFamily(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Crop Family....." variant="standard" />
         <TextField value={growthTime} onChange={(e)=>setGrowthTime(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Growth Time....." variant="standard" />
-        <TextField value={bestSeason} onChange={(e)=>setBestSeason(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Best Season....." variant="standard" />
         <TextField value={soilPh} onChange={(e)=>setSoilPh(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Soil PH....." variant="standard" />
-        
+        <TextField type='number' value={seedToHectare} onChange={(e)=>setSeedToHectare(Number(e.target.value))} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Seed To Hectare" variant="standard" />
+    
+         <div className="bestSeasonWrapper">
+            <span className="bestSeasonheader">
+                Optimal Season
+            </span>
+
+            <Box sx={{ display: "flex", gap: 2, marginTop: "15px" }}>
+                {/* Start Month */}
+                <FormControl sx={{ flex: 1 }}>
+                    <InputLabel id="start-month-label">Start Month</InputLabel>
+                    <MuiSelect
+                    labelId="start-month-label"
+                    value={bestSeason.start}
+                    onChange={(e) =>
+                        setBestSeason((prev) => ({ ...prev, start: e.target.value as number }))
+                    }
+                    >
+                    {months.map((m) => (
+                        <MenuItem key={m.value} value={m.value}>
+                        {m.name}
+                        </MenuItem>
+                    ))}
+                    </MuiSelect>
+                </FormControl>
+
+                {/* End Month */}
+                <FormControl sx={{ flex: 1 }}>
+                    <InputLabel id="end-month-label">End Month</InputLabel>
+                    <MuiSelect
+                    labelId="end-month-label"
+                    value={bestSeason.end}
+                    onChange={(e) =>
+                        setBestSeason((prev) => ({ ...prev, end: e.target.value as number }))
+                    }
+                    >
+                    {months.map((m) => (
+                        <MenuItem key={m.value} value={m.value}>
+                        {m.name}
+                        </MenuItem>
+                    ))}
+                    </MuiSelect>
+                </FormControl>
+            </Box>
+        </div>
 
 
 
@@ -555,18 +626,29 @@ export default function CropUpdate(){
             </div>
 
 
-            <div className="pestCheckBoxList">
-                {pestSelection!.map((pest) => (
-                <label key={pest.pestId}>
-                    <input
-                    type="checkbox"
-                    checked={selectedPests.some((p) => p.pestId === pest.pestId)}
-                    onChange={(e) => handleCheckboxChangePest(e, pest)}
-                    />
-                    {pest.pestName}
-                </label>
-                ))}
-            </div>
+
+            <Select
+            options={pestSelection.map((pest) => ({
+                value: pest.pestId,
+                label: pest.pestName,
+            }))}
+            isMulti
+            placeholder="Search and select pests..."
+            value={selectedPests.map((pest) => ({
+                value: pest.pestId,
+                label: pest.pestName,
+            }))}
+            onChange={(selected) => {
+                const updated = selected
+                ? pestSelection.filter((pest) =>
+                    selected.some((sel) => sel.value === pest.pestId)
+                    )
+                : [];
+                setSelectedPests(updated);
+            }}
+            isSearchable
+            />
+    
 
             <div className="selectedPestWrapper">
 
@@ -583,18 +665,27 @@ export default function CropUpdate(){
             </div>
 
 
-            <div className="pestCheckBoxList">
-                {diseaseSelection!.map((disease) => (
-                    <label key={disease.diseaseId}>
-                        <input
-                        type="checkbox"
-                        checked={selectedDiseases.some((p) => p.diseaseId === disease.diseaseId)}
-                        onChange={(e)=>handleCheckboxChangeDiseases(e,disease)}
-                        />
-                        {disease.diseaseName}
-                    </label>
-                    ))}
-            </div>
+            <Select
+            options={diseaseSelection.map((disease) => ({
+                value: disease.diseaseId,
+                label: disease.diseaseName,
+            }))}
+            isMulti
+            placeholder="Search and select diseases..."
+            value={selectedDiseases.map((disease) => ({
+                value: disease.diseaseId,
+                label: disease.diseaseName,
+            }))}
+            onChange={(selected) => {
+                const updated = selected
+                ? diseaseSelection.filter((disease) =>
+                    selected.some((sel) => sel.value === disease.diseaseId)
+                    )
+                : [];
+                setSelectedDiseases(updated);
+            }}
+            isSearchable
+            />
 
             <div className="selectedPestWrapper">
 
