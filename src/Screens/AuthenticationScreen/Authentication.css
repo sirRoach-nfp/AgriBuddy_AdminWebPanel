@@ -6,8 +6,10 @@
     align-items: center;
     width: 100vw;
     height: 100vh;
-    border: 1px solid red;
+    border: 0px solid red;
     flex-direction: column;
+    background: linear-gradient(135deg, #f0fdf4 0%, #d1fae5 100%);
+
 
 
 }
@@ -16,8 +18,8 @@
 .formWrapperAuth{
     width: 400px;
     height: fit-content;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 50px;
+    padding-bottom: 50px;
     padding-left: 20px ;
     padding-right: 20px;
 
@@ -29,8 +31,62 @@
 
 
 
-    border-radius: 30px;
-    background: linear-gradient(145deg, #ffffff, #e6e6e6);
-    box-shadow:  10px 10px 30px #cccccc,
-                -10px -10px 30px #ffffff;
+    background: white;
+    border-radius: 1rem; /* 16px */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    padding: 2rem;
+    width: 100%;
+    max-width: 28rem;
+    transform: scale(1);
+    transition: transform 0.3s ease;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.formWrapper__meta{
+    width: 100%;
+    border: 0px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.formWrapper__meta__iconWrapper{
+    width: 70px;
+    height: 70px;
+    border: 0px solid red;
+    margin-bottom: 5px;
+    border-radius: 15px;
+}
+
+.formWrapper__meta__iconImg{
+    width: 100%;
+    height: 100%;
+     border-radius: 15px;
+}
+
+.formWrapper__meta__sysName{
+    font-size: 1.75rem;
+    margin: 0;
+    font-weight: 700;
+}
+
+.formWrapper__meta__secondary{
+    font-size: 1;
+}
+
+.formWrapper__fieldsWrapper{
+    border: 0px solid red;
+    width: 100%;
+}
+
+.fieldsWrapper__header{
+    border: 0px solid black;
+    padding: 20px 10px;
+}
+
+.fieldsWrapper__header__primary{
+    font-size: 1.10rem;
+    font-weight: 600;
 }

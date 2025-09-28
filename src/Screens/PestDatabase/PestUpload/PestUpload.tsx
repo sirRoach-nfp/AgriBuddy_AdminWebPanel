@@ -15,14 +15,31 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
+
+
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import { Calendar, NotepadText, SquarePlus } from 'lucide-react';
+
+interface referenceInt{
+    id:number,
+    referenceTitle:string,
+    referenceLink:string,
+
+}
+
+
 export default function PestUpload(){
 
 
 
     const navigate = useNavigate();
+
+    const [reference,setReference] = useState<referenceInt[]>([])
+
     const [cover, setCover] = useState<File | null>(null);
     const [selectedSymptomImage, setSelectedSymptomImage] = useState<File[]>([]);
 
+    const [openUploadConfirm,setOpenUploadConfirm] = useState(false);
 
     const[pestName,setPestName] = useState("");
     const[scientificName,setScientificName] = useState("");
@@ -38,14 +55,31 @@ export default function PestUpload(){
     const handleSymptomImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log("Image selected :", e.target.files);
         if (e.target.files && e.target.files.length > 0) {
-          const newImage = e.target.files[0];
-          setSelectedSymptomImage(prev => [...prev, newImage]);
-      
-          // 👇 Reset the input so the same file can be picked again
-          e.target.value = "";
+            const newImage = e.target.files[0];
+            setSelectedSymptomImage(prev => [...prev, newImage]);
+        
+            // 👇 Reset the input so the same file can be picked again
+            e.target.value = "";
         }
-      };
+    };
     
+
+    const handleAddReference = () => {
+        const newReference: referenceInt = {
+            id:Date.now(),
+            referenceTitle:'',
+            referenceLink:'',
+        }
+
+        setReference(prev=> [...prev,newReference])
+    }
+
+    const handleRemoveReference = (indexToRemove:number) => {
+        setReference(
+            (prevContents) => 
+                prevContents.filter((_,index)=>index !== indexToRemove)
+        )
+    }
 
     const uploadPest = async()=>{
 
@@ -144,9 +178,10 @@ export default function PestUpload(){
                 ScientificName:scientificName,
                 Characterstics:characteristics,
                 Ecology:ecology,
-                Symptoms:symptomsData,
+                DamageSymptoms:symptomsData,
                 ControlMeasures:controlMeasures,
-                PestSnapshot:pestSnapshotUrl
+                PestSnapshot:pestSnapshotUrl,
+                reference:reference
             }
 
 
@@ -166,21 +201,16 @@ export default function PestUpload(){
         
     }
 
-
-
-
-    const [openUploadConfirm,setOpenUploadConfirm] = useState(false);
-
     const uploadDialog = ()=> (
 
         <Dialog
             open={openUploadConfirm}
-    
+
             keepMounted
             onClose={() =>setOpenUploadConfirm(false)}
             aria-describedby="alert-dialog-slide-description"
         >
-    
+
             <DialogTitle >{"Upload New Pest Data ?"}</DialogTitle>
             <DialogContent>
             <DialogContentText id="alert-dialog-slide-description" >
@@ -189,16 +219,16 @@ export default function PestUpload(){
             </DialogContentText>
 
             </DialogContent>
-    
-    
-    
+
+
+
             <DialogActions>
             <Button onClick={() =>setOpenUploadConfirm(false)}>Cancel Action</Button>
             <Button onClick={() =>uploadPest()}>Continue</Button>
             </DialogActions>
         </Dialog>
-    
-    
+
+
         )
 
 
@@ -226,15 +256,137 @@ export default function PestUpload(){
                     </div>
 
                 </div>
+                
 
-                <TextField value={pestName} onChange={(e)=>setPestName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Pest Name....." variant="standard" />
-                <TextField value={scientificName} onChange={(e)=>setScientificName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Scientific Name....." variant="standard" />
+                <div className="sectionWrapper">
+                    <div className="sectionHeader">
+                        <div className="headerIconWrapper" style={{backgroundColor:'#CEFCE2'}}>
+                            <NotepadText size={'20px'} color='#1C8960' />
+                        </div>
+                        <span className="sectionHeader__Primary">
+                            Basic Information
+                        </span>
+                    </div>
+                    
+                    <div className="inputWrapper">
+                        <span className="inputWrapper__header__primary">
+                            Pest common name
+                        </span>
+                        <TextField value={pestName} 
+                            onChange={(e)=>setPestName(e.target.value)} 
+                            sx={{marginTop:'0px',fontSize:'30px',width:'100%',
+
+                                "& .MuiOutlinedInput-root": {
+                                    borderRadius: "8px", // cleaner radius
+                                    height: "40px",      // control total height
+                                    "& input": {
+                                        padding: "0 12px", // remove vertical padding, keep horizontal
+                                        height: "100%",    // make text sit centered vertically
+                                    },
+                                    "& fieldset": {
+                                        borderRadius: "8px",
+                                    },
+                                },
+
+                            }} 
+                            id="outlined-basic" variant="outlined" />
+                    </div>
 
 
+                    <div className="inputWrapper">
+                        <span className="inputWrapper__header__primary">
+                            Pest scientific name
+                        </span>
+                        <TextField value={scientificName} 
+                            onChange={(e)=>setScientificName(e.target.value)} 
+                            sx={{marginTop:'0px',fontSize:'30px',width:'100%',
 
-                <div className="contentWrapper">
+
+                                "& .MuiOutlinedInput-root": {
+                                    borderRadius: "8px", // cleaner radius
+                                    height: "40px",      // control total height
+                                    "& input": {
+                                        padding: "0 12px", // remove vertical padding, keep horizontal
+                                        height: "100%",    // make text sit centered vertically
+                                    },
+                                    "& fieldset": {
+                                        borderRadius: "8px",
+                                    },
+                                },
+
+                            }} 
+                            id="outlined-basic" variant="outlined" />
+                    </div>
+
+                </div>
+                
+                
+                
+                <div className="referenceWrapper" style={{marginTop:"20px"}}>
+
+                    <div className="sectionHeader">
+                        <div className="headerIconWrapper" style={{backgroundColor:'#E1E6FF'}}>
+                    
+                            <Calendar size={'20px'} color='#4F4D96' />
+                        </div>
+                        <span className="sectionHeader__Primary">
+                            References
+                        </span>
+                        <Button onClick={handleAddReference} 
+                            startIcon={<SquarePlus />}
+                            className="createButton" 
+                            sx={{ color:'#309C78',marginTop: 'auto',marginBottom:'auto',lineHeight: 1, marginLeft:'auto'}}>
+                                Add new Reference</Button>
+                    </div>
+
+                    <div className="referenceContentWrapper" style={reference.length <= 0 ? { display: "none" } : {}}>
+
+                                {reference?.map((reference,index)=>{
+
+                                    return(
+                                        <div className="referenceItem">
+                                            <TextField placeholder='Reference Title' sx={{width:'30%'}}
+                                                value={reference.referenceTitle}
+                                                onChange={(e)=> {
+                                                    const newTitle = e.target.value;
+                                                    setReference((prev)=>
+                                                        prev.map((item,i)=>
+                                                            i === index ? {...item,referenceTitle:newTitle} : item
+                                                        )
+                                                    )
+                                                }}
+
+                                            />
+                                            
+                                            <TextField placeholder='Reference Link' sx={{width:'70%'}}
+                                                value={reference.referenceLink}
+                                                onChange={(e)=>{
+                                                    const newLink = e.target.value.trim();
+
+                                                    setReference((prev)=>
+                                                        prev.map((item,i)=>
+                                                            i === index ? {...item,referenceLink:newLink}:item
+                                                        )
+                                                    )
+                                                }}
+                                            
+                                            
+                                            />
+                                            <RemoveCircleIcon 
+                                                onClick={()=> handleRemoveReference(index)}
+                                                sx={{fontSize: 30}} />
+                                        </div>
+                                    )
+
+                                })}
+                    </div>
+                   
+                </div>
+
+
+                <div className="contentWrapper" style={{borderRadius:0,borderColor:'#e2e8f0'}}>
                     <div className="contentHeaderWrapper">
-                        <span className="contentHeader">Characteristics</span>
+                        <span className="sectionHeader__Primary">Characteristics</span>
                     </div>
 
 
@@ -255,9 +407,9 @@ export default function PestUpload(){
 
 
                 
-                <div className="contentWrapper">
+                <div className="contentWrapper" style={{borderRadius:0,borderColor:'#e2e8f0'}}>
                     <div className="contentHeaderWrapper">
-                        <span className="contentHeader">Ecology</span>
+                        <span className="sectionHeader__Primary">Ecology</span>
                     </div>
 
 
@@ -277,9 +429,9 @@ export default function PestUpload(){
                 </div>
 
 
-                <div className="contentWrapper">
+                <div className="contentWrapper" style={{borderRadius:0,borderColor:'#e2e8f0'}}>
                     <div className="contentHeaderWrapper">
-                        <span className="contentHeader">Damage Symptoms</span>
+                        <span className="sectionHeader__Primary">Damage Symptoms</span>
                     </div>
 
 
@@ -300,7 +452,7 @@ export default function PestUpload(){
 
 
 
-                    <div className="damageSymptomWrapper">
+                    <div className="damageSymptomWrapper" >
 
                         {selectedSymptomImage.map((image, index) => (
                             <img src={URL.createObjectURL(image)} alt="" className="symptomImage" key={index}/>
@@ -313,9 +465,9 @@ export default function PestUpload(){
                     </div>
                 </div>
 
-                <div className="contentWrapper">
+                <div className="contentWrapper" style={{borderRadius:0,borderColor:'#e2e8f0'}}>
                     <div className="contentHeaderWrapper">
-                        <span className="contentHeader">Control Measures</span>
+                        <span className="sectionHeader__Primary">Control Measures</span>
                     </div>
 
 

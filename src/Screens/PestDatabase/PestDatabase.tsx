@@ -177,7 +177,7 @@ export default function PestDatabase() {
 
                     <div className="contentWrapper_PestDb">
                         <div className="filterWrapper">
-                                                <Button sx={{backgroundColor:'#607D8B',height: '40px',}}  variant="contained" onClick={navigateToPestUpload}>Create New Crop Data</Button>
+                                                <Button sx={{backgroundColor:'#607D8B',height: '40px',}}  variant="contained" onClick={navigateToPestUpload}>Create New Pest Data</Button>
 
 
 

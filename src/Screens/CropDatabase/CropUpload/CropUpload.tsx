@@ -24,13 +24,21 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { Box, FormControl, InputLabel,MenuItem,Select as MuiSelect } from '@mui/material';
+import { BugOff, Calendar, CheckLine, NotepadText, SquarePlus, Worm } from 'lucide-react';
+
+
 interface contentsInt{
     id: number,
     header:string,
     content: string
 }
 
+interface referenceInt{
+    id:number,
+    referenceTitle:string,
+    referenceLink:string,
 
+}
 
 
 const pestsnew = [
@@ -94,58 +102,60 @@ export default function CropUpload(){
 
 
 
-        const navigate = useNavigate()
+    const navigate = useNavigate()
 
-        const[pestSelection,setPestSelection] = useState<Pest[]>([]);
-        const[diseaseSelection,setDiseaseSelection] = useState<Disease[]>([]);
-        const [bestSeason, setBestSeason] = useState<{ start: number | "", end: number | "" }>({
-            start: "",
-            end: "",
-        });
+    const[pestSelection,setPestSelection] = useState<Pest[]>([]);
+    const[diseaseSelection,setDiseaseSelection] = useState<Disease[]>([]);
+    const [bestSeason, setBestSeason] = useState<{ start: number | "", end: number | "" }>({
+        start: "",
+        end: "",
+    });
 
-        const [contents,setContents] = useState<contentsInt[]>([]);
-        const [cover, setCover] = useState<File | null>(null);
+    const [contents,setContents] = useState<contentsInt[]>([]);
+    const [reference,setReference] = useState<referenceInt[]>([])
 
-        const [seedToHectare,setSeedToHectare] = useState<number>()
+    const [cover, setCover] = useState<File | null>(null);
 
-        const[cropName,setCropName] = useState("");
-        const[scientificName,setScientificName] = useState("");
-        const[family,setFamily] = useState("");
-        const [growthTime,setGrowthTime] = useState("");
-       
-        const[soilPh,setSoilPh] = useState("");
-        const[soilType,setSoilType] = useState<string[]>([]);
+    const [seedToHectare,setSeedToHectare] = useState<number>()
 
-        const [selectedPests, setSelectedPests] = useState<Pest[]>([]);
-        const [selectedDiseases,setSelectedDiseases] = useState<Disease[]>([]);
+    const[cropName,setCropName] = useState("");
+    const[scientificName,setScientificName] = useState("");
+    const[family,setFamily] = useState("");
+    const [growthTime,setGrowthTime] = useState("");
+    
+    const[soilPh,setSoilPh] = useState("");
+    const[soilType,setSoilType] = useState<string[]>([]);
 
-        const handleCheckboxChangeSoil = (soil: string) => {
-            setSoilType((prevSelected) =>
-              prevSelected.includes(soil)
-                ? prevSelected.filter((s) => s !== soil)
-                : [...prevSelected, soil]
-            );
-          };
+    const [selectedPests, setSelectedPests] = useState<Pest[]>([]);
+    const [selectedDiseases,setSelectedDiseases] = useState<Disease[]>([]);
 
-        const handleCheckboxChangePest = (e: ChangeEvent<HTMLInputElement>, pest: Pest) => {
-            const { checked } = e.target;
-        
-            if (checked) {
-              setSelectedPests((prev) => [...prev, pest]);
-            } else {
-              setSelectedPests((prev) => prev.filter((p) => p.pestId !== pest.pestId));
-            }
-          };
-
-        const handleCheckboxChangeDiseases = (e: ChangeEvent<HTMLInputElement>, disease: Disease) => {
-            const { checked } = e.target;
-        
-            if (checked) {
-                setSelectedDiseases((prev) => [...prev, disease]);
-            } else {
-                setSelectedDiseases((prev) => prev.filter((p) => p.diseaseId !== disease.diseaseId));
-            }
+    const handleCheckboxChangeSoil = (soil: string) => {
+        setSoilType((prevSelected) =>
+            prevSelected.includes(soil)
+            ? prevSelected.filter((s) => s !== soil)
+            : [...prevSelected, soil]
+        );
         };
+
+    const handleCheckboxChangePest = (e: ChangeEvent<HTMLInputElement>, pest: Pest) => {
+        const { checked } = e.target;
+    
+        if (checked) {
+            setSelectedPests((prev) => [...prev, pest]);
+        } else {
+            setSelectedPests((prev) => prev.filter((p) => p.pestId !== pest.pestId));
+        }
+        };
+
+    const handleCheckboxChangeDiseases = (e: ChangeEvent<HTMLInputElement>, disease: Disease) => {
+        const { checked } = e.target;
+    
+        if (checked) {
+            setSelectedDiseases((prev) => [...prev, disease]);
+        } else {
+            setSelectedDiseases((prev) => prev.filter((p) => p.diseaseId !== disease.diseaseId));
+        }
+    };
 
         
     const checkData = ()=>{
@@ -173,6 +183,24 @@ export default function CropUpload(){
     const handleRemoveContent = (indexToRemove:number)=>{
         setContents(
             (prevContents)=>
+                prevContents.filter((_,index)=>index !== indexToRemove)
+        )
+    }
+
+
+    const handleAddReference = () => {
+        const newReference: referenceInt = {
+            id:Date.now(),
+            referenceTitle:'',
+            referenceLink:'',
+        }
+
+        setReference(prev=> [...prev,newReference])
+    }
+
+    const handleRemoveReference = (indexToRemove:number) => {
+        setReference(
+            (prevContents) => 
                 prevContents.filter((_,index)=>index !== indexToRemove)
         )
     }
@@ -267,6 +295,7 @@ export default function CropUpload(){
                 soilType:soilType,
                 optimalSeason:bestSeason,
                 seedRatio:seedToHectare,
+                reference:reference,
             }
 
 
@@ -396,21 +425,184 @@ export default function CropUpload(){
             </div>
 
 
+            <div className="sectionWrapper">
+                <div className="sectionHeader">
+                    <div className="headerIconWrapper" style={{backgroundColor:'#CEFCE2'}}>
+                        <NotepadText size={'20px'} color='#1C8960' />
+                    </div>
+                    <span className="sectionHeader__Primary">
+                        Basic Information
+                    </span>
+                </div>
 
 
-            <TextField value={cropName} onChange={(e)=>setCropName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Crop Name....." variant="standard" />
-            <TextField value={scientificName} onChange={(e)=>setScientificName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Scientific Name....." variant="standard" />
-            <TextField value={family} onChange={(e)=>setFamily(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Crop Family....." variant="standard" />
-            <TextField value={growthTime} onChange={(e)=>setGrowthTime(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Growth Time....." variant="standard" />
-            <TextField value={soilPh} onChange={(e)=>setSoilPh(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Soil PH....." variant="standard" />
-            <TextField type='number' value={seedToHectare} onChange={(e)=>setSeedToHectare(Number(e.target.value))} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Seed To Hectare" variant="standard" />
-            
+                <div className="inputWrapper">
+               
+                    <span className="inputWrapper__header__primary">
+                        Crop Name
+                    </span>
+                    <TextField value={cropName} 
+                        onChange={(e)=>setCropName(e.target.value)} 
+                        sx={{marginTop:'0px',fontSize:'1rem',width:'100%',borderRadius:'20px',
+
+                            "& .MuiOutlinedInput-root": {
+                                borderRadius: "8px", // cleaner radius
+                                height: "40px",      // control total height
+                                "& input": {
+                                    padding: "0 12px", // remove vertical padding, keep horizontal
+                                    height: "100%",    // make text sit centered vertically
+                                },
+                                "& fieldset": {
+                                    borderRadius: "8px",
+                                },
+                            },
+                        }} 
+                        id="outlined-basic" 
+                
+                        InputLabelProps={{ shrink: false }}
+                        variant="outlined" />
+                </div>
+                        
+                <div className="inputWrapper">
+                    <span className="inputWrapper__header__primary">
+                        Scientific Name
+                    </span>
+                    <TextField value={scientificName} 
+                        onChange={(e)=>setScientificName(e.target.value)} 
+                        sx={{marginTop:'0px',fontSize:'1rem',width:'100%',
+
+                            "& .MuiOutlinedInput-root": {
+                                borderRadius: "8px", // cleaner radius
+                                height: "40px",      // control total height
+                                "& input": {
+                                    padding: "0 12px", // remove vertical padding, keep horizontal
+                                    height: "100%",    // make text sit centered vertically
+                                },
+                                "& fieldset": {
+                                    borderRadius: "8px",
+                                },
+                                },
+
+
+                        }} 
+                        id="outlined-basic"
+                        variant="outlined" />
+                </div>
+
+                <div className="inputWrapper">
+                    <span className="inputWrapper__header__primary">
+                        Crop Family
+                    </span>
+                    <TextField value={family} 
+                        onChange={(e)=>setFamily(e.target.value)} 
+                        sx={{marginTop:'0px',fontSize:'1rem',width:'100%',
+
+                            "& .MuiOutlinedInput-root": {
+                                borderRadius: "8px", // cleaner radius
+                                height: "40px",      // control total height
+                                "& input": {
+                                    padding: "0 12px", // remove vertical padding, keep horizontal
+                                    height: "100%",    // make text sit centered vertically
+                                },
+                                "& fieldset": {
+                                    borderRadius: "8px",
+                                },
+                            },
+
+                        }} 
+                        id="outlined-basic" variant="outlined" />
+                </div>
+
+                <div className="inputWrapper">
+                    <span className="inputWrapper__header__primary">
+                        Maturity Time (days)
+                    </span>
+                    <TextField value={growthTime} 
+                        onChange={(e)=>setGrowthTime(e.target.value)} 
+                        sx={{marginTop:'0px',fontSize:'1rem',width:'100%',
+
+                            "& .MuiOutlinedInput-root": {
+                                borderRadius: "8px", // cleaner radius
+                                height: "40px",      // control total height
+                                "& input": {
+                                    padding: "0 12px", // remove vertical padding, keep horizontal
+                                    height: "100%",    // make text sit centered vertically
+                                },
+                                "& fieldset": {
+                                    borderRadius: "8px",
+                                },
+                            },
+                        }} 
+                        id="outlined-basic" variant="outlined" />
+                </div>
+
+                <div className="inputWrapper">
+                    <span className="inputWrapper__header__primary">
+                        Seed To Hectare Ratio
+                    </span>
+                    <TextField type='number' 
+                        value={seedToHectare} 
+                        onChange={(e)=>setSeedToHectare(Number(e.target.value))} 
+                        sx={{marginTop:'00px',fontSize:'30px',width:'100%',
+
+
+                        "& .MuiOutlinedInput-root": {
+                            borderRadius: "8px", // cleaner radius
+                            height: "40px",      // control total height
+                            "& input": {
+                                padding: "0 12px", // remove vertical padding, keep horizontal
+                                height: "100%",    // make text sit centered vertically
+                            },
+                            "& fieldset": {
+                                borderRadius: "8px",
+                            },
+                        },
+
+
+                        }} 
+                        id="outlined-basic" 
+                        variant="outlined" />
+                </div>
+
+
+                <div className="inputWrapper">
+                    <span className="inputWrapper__header__primary">
+                        Soil pH Range
+                    </span>
+                   <TextField value={soilPh} onChange={(e)=>setSoilPh(e.target.value)} 
+                        sx={{marginTop:'0px',fontSize:'30px',width:'100%',
+
+                        "& .MuiOutlinedInput-root": {
+                            borderRadius: "8px", // cleaner radius
+                            height: "40px",      // control total height
+                            "& input": {
+                                padding: "0 12px", // remove vertical padding, keep horizontal
+                                height: "100%",    // make text sit centered vertically
+                            },
+                            "& fieldset": {
+                                borderRadius: "8px",
+                            },
+                        },
+                        }}
+                        placeholder='e.g 6.4-7' 
+                        id="outlined-basic"variant="outlined" />
+                </div>
+
+
+            </div>                        
+          
             <div className="bestSeasonWrapper">
-                <span className="bestSeasonheader">
-                    Optimal Season
-                </span>
+                <div className="sectionHeader">
+                    <div className="headerIconWrapper" style={{backgroundColor:'#FFEED0'}}>
+                  
+                        <Calendar size={'20px'} color='#DD8057' />
+                    </div>
+                    <span className="sectionHeader__Primary">
+                        Optimal Season
+                    </span>
+                </div>
 
-                <Box sx={{ display: "flex", gap: 2, marginTop: "15px" }}>
+                <Box sx={{ display: "flex", gap: 2, marginTop: "15px",flexDirection:'column'}}>
                     {/* Start Month */}
                     <FormControl sx={{ flex: 1 }}>
                         <InputLabel id="start-month-label">Start Month</InputLabel>
@@ -449,23 +641,95 @@ export default function CropUpload(){
                 </Box>
             </div>
                
+            <div className="referenceWrapper">
+                <div className="sectionHeader">
+                    <div className="headerIconWrapper" style={{backgroundColor:'#E1E6FF'}}>
+                  
+                        <Calendar size={'20px'} color='#4F4D96' />
+                    </div>
+                    <span className="sectionHeader__Primary">
+                        References
+                    </span>
+                    <Button onClick={handleAddReference} 
+                        startIcon={<SquarePlus />}
+                        className="createButton" 
+                        sx={{ color:'#309C78',marginTop: 'auto',marginBottom:'auto',lineHeight: 1, marginLeft:'auto'}}>
+                            Add new Reference</Button>
+                </div>
 
+                <div className="referenceContentWrapper" style={reference.length <= 0 ? { display: "none" } : {}}>
+
+                        {reference.map((reference,index)=>{
+
+                            return(
+                                <div className="referenceItem">
+                                    <TextField placeholder='Reference Title' sx={{width:'30%'}}
+                                        value={reference.referenceTitle}
+                                        onChange={(e)=> {
+                                            const newTitle = e.target.value;
+                                            setReference((prev)=>
+                                                prev.map((item,i)=>
+                                                    i === index ? {...item,referenceTitle:newTitle} : item
+                                                )
+                                            )
+                                        }}
+
+                                    />
+                                    
+                                    <TextField placeholder='Reference Link' sx={{width:'70%'}}
+                                        value={reference.referenceLink}
+                                        onChange={(e)=>{
+                                            const newLink = e.target.value.trim();
+
+                                            setReference((prev)=>
+                                                prev.map((item,i)=>
+                                                    i === index ? {...item,referenceLink:newLink}:item
+                                                )
+                                            )
+                                        }}
+                                    
+                                    
+                                    />
+                                    <RemoveCircleIcon 
+                                        onClick={()=> handleRemoveReference(index)}
+                                        sx={{fontSize: 30}} />
+                                </div>
+                            )
+
+                        })}
+
+
+
+                </div>
+
+                
+
+
+            </div>
             
             
             <div className="pestSelectionWrapper">
 
-                <div className="headerWrapper_pestSelection">
-                    <span className="pestSelectionHeader">Select Soil Type</span>
+                <div className="sectionHeader">
+                    <div className="headerIconWrapper" style={{backgroundColor:'#FDE3E4'}}>
+                        <CheckLine size={'20px'} color='#CA5C67'/>
+           
+                    </div>
+                    <span className="sectionHeader__Primary">
+                        Suitable Soil Types
+                    </span>
                 </div>
+
 
 
                 <div className="pestCheckBoxList">
                     {soilTypes.map((soil, index) => (
-                    <label key={index}>
+                    <label key={index} style={{fontSize:'1rem', display:'flex',flexDirection:'row',alignItems:'center',gap:'5px'}}>
                         <input
                         type="checkbox"
                         checked={soilType.includes(soil)}
                         onChange={() => handleCheckboxChangeSoil(soil)}
+                        style={{width:'1rem',height:'1rem'}}
                         />
                         {soil}
                     </label>
@@ -483,8 +747,15 @@ export default function CropUpload(){
             
             <div className="pestSelectionWrapper">
 
-                <div className="headerWrapper_pestSelection">
-                    <span className="pestSelectionHeader">Select Pests</span>
+                <div className="sectionHeader" style={{marginBottom:'10px'}}>
+                    <div className="headerIconWrapper" style={{backgroundColor:'#FDE3E4'}}>
+                     
+                        <BugOff size={'20px'} color='#CA5C67' />
+           
+                    </div>
+                    <span className="sectionHeader__Primary">
+                        Related Pests
+                    </span>
                 </div>
 
 
@@ -517,8 +788,15 @@ export default function CropUpload(){
 
             <div className="pestSelectionWrapper">
 
-                <div className="headerWrapper_pestSelection">
-                    <span className="pestSelectionHeader">Select Diseases</span>
+                <div className="sectionHeader" style={{marginBottom:'10px'}}>
+                    <div className="headerIconWrapper" style={{backgroundColor:'#FDE3E4'}}>
+                     
+                    
+                        <Worm size={'20px'} color='#CA5C67'/>
+                    </div>
+                    <span className="sectionHeader__Primary">
+                        Related Diseases
+                    </span>
                 </div>
 
 
@@ -551,64 +829,103 @@ export default function CropUpload(){
 
             </div>            
 
-
-
             {contents.map((content,index)=>{
                 return(
 
-                    <div className="contentWrapper">
+                    <div className="contentWrapper" style={{borderRadius:0,borderColor:'#e2e8f0'}}>
                         <div className="contentWrapperHeaderWrapper">
                             <RemoveCircleIcon sx={{fontSize: 30}} onClick={() => handleRemoveContent(index)}/>
                         </div>
 
-                        <TextField sx={{width:'95%'}} value={content.header}  id="standard-basic" label="Content Header..." variant="standard"
+                        <div className="inputWrapper">
+                            <span className="inputWrapper__header__primary">
+                                Content Header
+                            </span>
+                            <TextField sx={{width:'100%',
+                                "& .MuiOutlinedInput-root": {
+                                    borderRadius: "8px", // cleaner radius
+                                    height: "40px",      // control total height
+                                    "& input": {
+                                        padding: "0 12px", // remove vertical padding, keep horizontal
+                                        height: "100%",    // make text sit centered vertically
+                                    },
+                                    "& fieldset": {
+                                        borderRadius: "8px",
+                                    },
+                                },
+
+                            }} value={content.header}  id="outlined-basic" variant="outlined"
                         
-                            onChange={(e)=>{
-                                const newHeader = e.target.value;
-                                setContents((prev)=>
-                                    prev.map((item,i)=>
-                                        i===index ? {...item,header:newHeader} : item
+                                onChange={(e)=>{
+                                    const newHeader = e.target.value;
+                                    setContents((prev)=>
+                                        prev.map((item,i)=>
+                                            i===index ? {...item,header:newHeader} : item
+                                        )
                                     )
-                                )
-                            }}
+                                }}
+                            
                         
+                            />
+                        </div>
+
+
                         
-                        />
 
-                        <TextField
-                            value={content.content}
-                            id="outlined-multiline-static"
-                            label="Content Body..."
-                            multiline
-                            rows={15}
-                            defaultValue="Default Value"
-                            sx={{marginTop:'30px',width:'95%'}}
+                        <div className="inputWrapper">
+                            <span className="inputWrapper__header__primary">
+                                Content Body
+                            </span>
+                            <TextField
+                                value={content.content}
+                                id="outlined-multiline"
+                              
+                                multiline
+                                rows={15}
+                                defaultValue="Default Value"
+                                sx={{marginTop:'0px',width:'100%'}}
 
 
-                            onChange={(e)=>{
-                                const newContent = e.target.value;
-                                setContents((prev)=>
-                                    prev.map((item,i)=>
-                                        i===index ? {...item,content:newContent} : item
+                                onChange={(e)=>{
+                                    const newContent = e.target.value;
+                                    setContents((prev)=>
+                                        prev.map((item,i)=>
+                                            i===index ? {...item,content:newContent} : item
+                                        )
                                     )
-                                )
-                            }}
+                                }}
 
 
 
                             />
+
+                        </div>
+
+
 
                     </div>
                 )
             })}
 
 
-            <Button onClick={handleAddContent} className="createButton" sx={{ marginTop: '10px' }}>Create new content wrapper</Button>
+            <div className="actionWrapper" style={{width:'100%',
+                display:'flex',
+                flexDirection:'row',
+                alignItems:'center',
+                justifyContent:'space-between',
+                padding:'10px 30px'
+                }}>
+
+                <Button variant="outlined" onClick={handleAddContent} className="createButton" sx={{ marginTop: '10px' }}>Create new content wrapper</Button>
 
 
 
-            <Button onClick={()=>setOpenUploadConfirm(true)} className="createButton" sx={{ marginTop: '10px' }}>Upload Crop Data</Button>
-            <Button onClick={()=>console.log("Best Season Data : ",bestSeason)}>Test data</Button>
+                <Button variant="contained" onClick={()=>setOpenUploadConfirm(true)} className="createButton" sx={{ marginTop: '10px' }}>Upload Crop Data</Button>
+    
+
+            </div>
+
+
 
 
 

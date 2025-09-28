@@ -181,7 +181,7 @@ export default function ArticleManagement() {
         <hr />
       </div>
 
-      <div className="contentWrapper">
+      <div className="contentWrapper" style={{border:'0px solid white'}}>
         <div className="filterWrapper">
           <Button
             sx={{ backgroundColor: "#607D8B", height: "40px" }}

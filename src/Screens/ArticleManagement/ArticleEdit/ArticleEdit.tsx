@@ -218,18 +218,60 @@ export default function ArticleEdit(){
                 </div>
 
 
-                <TextField value={title} onChange={(e)=>setTitle(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Article Title....." variant="standard" />
+                <div className="sectionWrapper">
+                    <div className="inputWrapper">
+                        <span className="inputWrapper__header__primary">
+                            Article Title
+                        </span> 
+                        <TextField value={title} 
+                            onChange={(e)=>setTitle(e.target.value)} 
+                            sx={{marginTop:'0px',fontSize:'30px',width:'100%',
+    
+                                "& .MuiOutlinedInput-root": {
+                                    borderRadius: "8px", // cleaner radius
+                                    height: "40px",      // control total height
+                                    "& input": {
+                                        padding: "0 12px", // remove vertical padding, keep horizontal
+                                        height: "100%",    // make text sit centered vertically
+                                    },
+                                    "& fieldset": {
+                                        borderRadius: "8px",
+                                    },
+                                },
+    
+                            }} 
+                            id="outlined-basic" variant="outlined" />
+                    </div>
+                </div>
 
                 {contents.map((content,index)=>{
                     return(
     
-                        <div className="contentWrapper">
-                            <div className="contentWrapperHeaderWrapper">
-                                <RemoveCircleIcon sx={{fontSize: 30}} onClick={() => handleRemoveContent(index)}/>
-                            </div>
-    
-                            <TextField value={content.header}  id="standard-basic" label="Article Title" variant="standard"
+                        <div className="contentWrapper"  style={{borderRadius:0,borderColor:'#e2e8f0',padding:'20px 30px'}}>
+                        <div className="contentWrapperHeaderWrapper">
+                            <RemoveCircleIcon sx={{fontSize: 30,color:'red'}} onClick={() => handleRemoveContent(index)}/>
+                        </div>
+
+                        <div className="inputWrapper">
+                            <span className="inputWrapper__header__primary">
+                                Content Header
+                            </span>
                             
+                            <TextField style={{width:'100%'}} value={content.header}  id="outlined-basic" variant="outlined"
+                                sx={{width:'100%',
+                                        "& .MuiOutlinedInput-root": {
+                                            borderRadius: "8px", // cleaner radius
+                                            height: "40px",      // control total height
+                                            "& input": {
+                                                padding: "0 12px", // remove vertical padding, keep horizontal
+                                                height: "100%",    // make text sit centered vertically
+                                            },
+                                            "& fieldset": {
+                                                borderRadius: "8px",
+                                            },
+                                        },
+
+                                    }}
                                 onChange={(e)=>{
                                     const newHeader = e.target.value;
                                     setContents((prev)=>
@@ -238,22 +280,26 @@ export default function ArticleEdit(){
                                         )
                                     )
                                 }}
-
-                                style={{width:'95%'}}
                             
-                            
+                        
                             />
-    
+                        </div>
+
+                        
+                        <div className="inputWrapper">
+                            <span className="inputWrapper__header__primary">
+                                Content Body
+                            </span>
                             <TextField
                                 value={content.content}
                                 id="outlined-multiline-static"
-                                label="Content"
+                            
                                 multiline
                                 rows={15}
                                 defaultValue="Default Value"
-                                sx={{marginTop:'30px'}}
-                                style={{width:'95%'}}
-    
+                                sx={{marginTop:'0px',width:'100%'}}
+
+
                                 onChange={(e)=>{
                                     const newContent = e.target.value;
                                     setContents((prev)=>
@@ -262,18 +308,21 @@ export default function ArticleEdit(){
                                         )
                                     )
                                 }}
-    
-    
-    
-                                />
-    
+
+
+
+                            />
+
                         </div>
+
+
+                    </div>
                     )
                 })}
 
                 
 
-                <Button onClick={handleAddContent} className="createButton" sx={{ marginTop: '10px' }}>Create new content wrapper</Button>
+                <Button onClick={handleAddContent} variant="outlined" className="createButton" sx={{ marginTop: '10px' }}>Create new content wrapper</Button>
                
 
 

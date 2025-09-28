@@ -13,7 +13,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { toast } from 'react-toastify';
 
 
-
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 
 //dialog imports
@@ -27,10 +27,21 @@ import { TransitionProps } from '@mui/material/transitions';
 
 
 
-import { Worm } from 'lucide-react';
+import { Calendar, NotepadText, SquarePlus, Worm } from 'lucide-react';
+
+
+interface referenceInt{
+    id:number,
+    referenceTitle:string,
+    referenceLink:string,
+
+}
 
 
 export default function DiseaseEdit(){    
+
+
+    const [reference,setReference] = useState<referenceInt[]>([])
 
     const navigate = useNavigate();
     const{id} = useParams();
@@ -68,6 +79,22 @@ export default function DiseaseEdit(){
         setSymptomImages(prev => prev.filter((_, i) => i !== index));
       };
 
+    const handleAddReference = () => {
+        const newReference: referenceInt = {
+            id:Date.now(),
+            referenceTitle:'',
+            referenceLink:'',
+        }
+
+        setReference(prev=> [...prev,newReference])
+    }
+
+    const handleRemoveReference = (indexToRemove:number) => {
+        setReference(
+            (prevContents) => 
+                prevContents.filter((_,index)=>index !== indexToRemove)
+        )
+    }
 
     useEffect(()=>{
 
@@ -91,6 +118,7 @@ export default function DiseaseEdit(){
                 setSymptoms(docSnap.data().DamageSymptoms.Symptoms)
                 setSymptomImages(docSnap.data().DamageSymptoms.SymptomsSnapshot)
                 setControlMeasures(docSnap.data().ControlMeasures)
+                setReference(docSnap.data().reference ?? [])
             }
             
         }
@@ -194,7 +222,8 @@ export default function DiseaseEdit(){
                 MethodsOfDispersal:methodOfDispersal,
                 DiseaseSnapshot:newCover,
                 DamageSymptoms:symptomsData,
-                ControlMeasures:controlMeasures
+                ControlMeasures:controlMeasures,
+                reference:reference
             }
 
 
@@ -336,8 +365,8 @@ export default function DiseaseEdit(){
                     </div>
                 <div className="headerWrapper_ArticleEdit_buttonWrappers">
 
-                    <Button variant="contained"  sx={{height:'40px',backgroundColor:'red'}} onClick={() =>setOpenDeleteConfirm(true)}>Delete Article</Button>
-                    <Button variant="contained" onClick={saveEdit} sx={{height:'40px',backgroundColor:'#607D8B'}}>Save Edited Article</Button>
+                    <Button variant="contained"  sx={{height:'40px',backgroundColor:'red'}} onClick={() =>setOpenDeleteConfirm(true)}>Delete Disease Data</Button>
+                    <Button variant="contained" onClick={saveEdit} sx={{height:'40px',backgroundColor:'#607D8B'}}>Save Changes</Button>
                 </div>
 
 
@@ -362,12 +391,106 @@ export default function DiseaseEdit(){
 
                 </div>
 
-                <TextField value={diseaseName} onChange={(e)=>setDiseaseName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Disease Name....." variant="standard" />
-               
+                <div className="sectionWrapper">
+                    <div className="sectionHeader">
+                        <div className="headerIconWrapper" style={{backgroundColor:'#CEFCE2'}}>
+                            <NotepadText size={'20px'} color='#1C8960' />
+                        </div>
+                        <span className="sectionHeader__Primary">
+                            Basic Information
+                        </span>
+                    </div>
 
-                <div className="contentWrapper">
+                    <div className="inputWrapper">
+                        <span className="inputWrapper__header__primary">
+                            Disease Name
+                        </span>
+
+                        <TextField value={diseaseName} 
+                            onChange={(e)=>setDiseaseName(e.target.value)} 
+                            sx={{marginTop:'0px',fontSize:'30px',width:'100%',
+                                "& .MuiOutlinedInput-root": {
+                                    borderRadius: "8px", // cleaner radius
+                                    height: "40px",      // control total height
+                                    "& input": {
+                                        padding: "0 12px", // remove vertical padding, keep horizontal
+                                        height: "100%",    // make text sit centered vertically
+                                    },
+                                    "& fieldset": {
+                                        borderRadius: "8px",
+                                    },
+                                },
+
+
+                            }} 
+                            id="outlined-basic" variant="outlined" />
+                    </div>
+                </div>
+               
+               <div className="referenceWrapper" style={{marginTop:"20px"}}>
+
+                    <div className="sectionHeader">
+                        <div className="headerIconWrapper" style={{backgroundColor:'#E1E6FF'}}>
+                    
+                            <Calendar size={'20px'} color='#4F4D96' />
+                        </div>
+                        <span className="sectionHeader__Primary">
+                            References
+                        </span>
+                        <Button onClick={handleAddReference} 
+                            startIcon={<SquarePlus />}
+                            className="createButton" 
+                            sx={{ color:'#309C78',marginTop: 'auto',marginBottom:'auto',lineHeight: 1, marginLeft:'auto'}}>
+                                Add new Reference</Button>
+                    </div>
+
+                    <div className="referenceContentWrapper" style={reference.length <= 0 ? { display: "none" } : {}}>
+
+                                {reference?.map((reference,index)=>{
+
+                                    return(
+                                        <div className="referenceItem">
+                                            <TextField placeholder='Reference Title' sx={{width:'30%'}}
+                                                value={reference.referenceTitle}
+                                                onChange={(e)=> {
+                                                    const newTitle = e.target.value;
+                                                    setReference((prev)=>
+                                                        prev.map((item,i)=>
+                                                            i === index ? {...item,referenceTitle:newTitle} : item
+                                                        )
+                                                    )
+                                                }}
+
+                                            />
+                                            
+                                            <TextField placeholder='Reference Link' sx={{width:'70%'}}
+                                                value={reference.referenceLink}
+                                                onChange={(e)=>{
+                                                    const newLink = e.target.value.trim();
+
+                                                    setReference((prev)=>
+                                                        prev.map((item,i)=>
+                                                            i === index ? {...item,referenceLink:newLink}:item
+                                                        )
+                                                    )
+                                                }}
+                                            
+                                            
+                                            />
+                                            <RemoveCircleIcon 
+                                                onClick={()=> handleRemoveReference(index)}
+                                                sx={{fontSize: 30}} />
+                                        </div>
+                                    )
+
+                                })}
+                    </div>
+                   
+                </div>
+
+                <div className="contentWrapper" style={{borderRadius:0,borderColor:'#e2e8f0'}}>
                     <div className="contentHeaderWrapper">
-                        <span className="contentHeader">Symptoms</span>
+                        <span className="sectionHeader__Primary">Symptoms</span>
                     </div>
 
 
@@ -404,9 +527,9 @@ export default function DiseaseEdit(){
 
 
 
-                <div className="contentWrapper">
+                <div className="contentWrapper" style={{borderRadius:0,borderColor:'#e2e8f0'}}>
                     <div className="contentHeaderWrapper">
-                        <span className="contentHeader">Disease Development</span>
+                        <span className="sectionHeader__Primary">Disease Development</span>
                     </div>
 
 
@@ -425,9 +548,9 @@ export default function DiseaseEdit(){
 
 
 
-                <div className="contentWrapper">
+                <div className="contentWrapper" style={{borderRadius:0,borderColor:'#e2e8f0'}}>
                     <div className="contentHeaderWrapper">
-                        <span className="contentHeader">Methods Of Dispersal</span>
+                        <span className="sectionHeader__Primary">Methods Of Dispersal</span>
                     </div>
 
 
@@ -447,9 +570,9 @@ export default function DiseaseEdit(){
 
 
 
-                <div className="contentWrapper">
+                <div className="contentWrapper" style={{borderRadius:0,borderColor:'#e2e8f0'}}>
                     <div className="contentHeaderWrapper">
-                        <span className="contentHeader">Control Measures</span>
+                        <span className="sectionHeader__Primary">Control Measures</span>
                     </div>
 
 
@@ -468,7 +591,7 @@ export default function DiseaseEdit(){
                 </div>
 
 
-                <Button onClick={()=>console.log("Symptoms snapshots : ", symptomImages)}>check symptom images</Button>
+                <Button style={{display:'none'}} onClick={()=>console.log("Symptoms snapshots : ", symptomImages)}>check symptom images</Button>
 
             </div>
         

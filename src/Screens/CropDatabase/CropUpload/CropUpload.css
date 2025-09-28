@@ -1,13 +1,49 @@
 
 
+.sectionHeader{
+    font-size: 1.20rem;
+    margin: 0;
+}
 
+.sectionHeaderWrapper{
+    padding: .75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.referenceWrapper{
+    border: 1px solid #e2e8f0;
+    padding: 20px 30px ;
+}
+
+.referenceItem{
+    width: 100%;
+    border: 0px solid black;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.referenceContentWrapper{
+    border: 0px solid green;
+    padding: 20px 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
 .bestSeasonWrapper{
     width: 100%;
-    border: 1px solid red;
+    border: 1px solid #e2e8f0;
     margin-top: 20px;
     margin-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
     padding-top: 20px;
     padding-bottom: 20px;
 }
@@ -41,8 +77,8 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 20px;
+    padding-bottom: 20px;
     flex-wrap: wrap;
     gap: 15px;
     
@@ -50,15 +86,14 @@
 
 .pestSelectionWrapper{
     border: 0px solid red;
-    border-radius: 50px;
+
     background: #ffffff;
-    box-shadow:  5px 5px 10px #d6d6d6,
-                -5px -5px 10px #ffffff;
+    border: 1px solid #e2e8f0;
     margin-top: 20px;
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
-    padding: 20px;
+
+    padding: 20px 30px;
 }
 
 .headerWrapper_pestSelection{

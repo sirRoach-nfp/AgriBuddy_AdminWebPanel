@@ -7,6 +7,9 @@ import { getIdToken, getIdTokenResult, onAuthStateChanged, signInWithEmailAndPas
 import { auth } from '../../firebaseconfig';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import '../../global.css'
+import iconAgriBuddy from '../../assets/AgriBuddyAppIcon.png';
+
 export default function AuthenticationScreen(){
 
 
@@ -81,11 +84,97 @@ export default function AuthenticationScreen(){
         <div className="mainWrapperAuth">
 
             <div className="formWrapperAuth">
+                <div className="formWrapper__meta">
+                    <div className="formWrapper__meta__iconWrapper">
+                        <img src={iconAgriBuddy} alt="" className='formWrapper__meta__iconImg' />
+                    </div>
+                    <span className="formWrapper__meta__sysName">
+                        AgriBuddy
+                    </span>
+                    <span className="formWrapper__meta__secondary">
+                        Crop Knowledge Hub
+                    </span>
+                </div>
 
-                <h3 className="LoginHeader">Log in to your admin account</h3>
-                <TextField sx={{ width: '90%' }}  id="outlined-basic" label="Admin UID" variant="outlined" onChange={(e)=>{setEmail(e.target.value)}} />
-                <TextField sx={{ width: '90%' }} id="outlined-basic" label="Admin Password" variant="outlined" onChange={(e)=>{setPassword(e.target.value)}}/>
-                <Button variant="outlined" onClick={handleLogin}>Login</Button>
+                <div className="formWrapper__fieldsWrapper">
+                    <div className="fieldsWrapper__header">
+                        <span className="fieldsWrapper__header__primary">
+                            Log in to your admin account
+                        </span>
+                    </div>
+
+
+                    <div className="inputWrapper">
+                        <span className="inputWrapper__header__primary">
+                            Admin ID
+                        </span>
+                        <TextField sx={{ width: '100%',
+
+                            "& .MuiOutlinedInput-root": {
+                                borderRadius: "5px", // cleaner radius
+                                height: "40px",      // control total height
+                                "& input": {
+                                    padding: "0 12px", // remove vertical padding, keep horizontal
+                                    height: "100%",    // make text sit centered vertically
+                                },
+                                "& fieldset": {
+                                    borderRadius: "5px",
+                                },
+                            },
+
+                         }}  
+                            id="outlined-basic" 
+                            placeholder='Enter your admin id'
+                            variant="outlined" 
+                            onChange={(e)=>{setEmail(e.target.value)}}
+                            
+                        />
+                    </div>
+
+
+                    <div className="inputWrapper">
+                        <span className="inputWrapper__header__primary">
+                            Admin Password
+                        </span>
+                        <TextField sx={{ width: '100%',
+
+                              "& .MuiOutlinedInput-root": {
+                                borderRadius: "5px", // cleaner radius
+                                height: "40px",      // control total height
+                                "& input": {
+                                    padding: "0 12px", // remove vertical padding, keep horizontal
+                                    height: "100%",    // make text sit centered vertically
+                                },
+                                "& fieldset": {
+                                    borderRadius: "5px",
+                                },
+                            },
+                         }} 
+                            id="outlined-basic"
+                            type="password"
+                            variant="outlined" 
+                            placeholder='Enter your password'
+                            onChange={(e)=>{setPassword(e.target.value)}}/>
+                    </div>
+
+
+
+
+                </div>
+
+                
+                
+                <Button sx={{width:'100%',
+                        marginTop:'20px',
+                        marginBottom:'20px',
+                        border: 'none',
+                        paddingTop:'10px',
+                        paddingBottom:'10px',
+                        background: "linear-gradient(90deg, #16a34a 0%, #059669 100%)",
+                        fontWeight: 'bold',     // font weight
+                        color: '#ffffff',}} 
+                        variant="outlined" 
+                        onClick={handleLogin}>Login</Button>
             </div>
         </div>
         </>

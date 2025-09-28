@@ -134,8 +134,34 @@ export default function ArticleUpload(){
            
             </div>
 
+                        
+            <div className="sectionWrapper">
+                <div className="inputWrapper">
+                    <span className="inputWrapper__header__primary">
+                        Article Title
+                    </span> 
+                    <TextField value={title} 
+                        onChange={(e)=>setTitle(e.target.value)} 
+                        sx={{marginTop:'0px',fontSize:'30px',width:'100%',
 
-            <TextField value={title} onChange={(e)=>setTitle(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Article Title....." variant="standard" />
+                            "& .MuiOutlinedInput-root": {
+                                borderRadius: "8px", // cleaner radius
+                                height: "40px",      // control total height
+                                "& input": {
+                                    padding: "0 12px", // remove vertical padding, keep horizontal
+                                    height: "100%",    // make text sit centered vertically
+                                },
+                                "& fieldset": {
+                                    borderRadius: "8px",
+                                },
+                            },
+
+                        }} 
+                        id="outlined-basic" variant="outlined" />
+                </div>
+            </div>
+
+           
 
 
 
@@ -143,53 +169,86 @@ export default function ArticleUpload(){
             {contents.map((content,index)=>{
                 return(
 
-                    <div className="contentWrapper">
+                    <div className="contentWrapper"  style={{borderRadius:0,borderColor:'#e2e8f0',padding:'20px 30px'}}>
                         <div className="contentWrapperHeaderWrapper">
                             <RemoveCircleIcon sx={{fontSize: 30,color:'red'}} onClick={() => handleRemoveContent(index)}/>
                         </div>
 
-                        <TextField style={{width:'95%'}} value={content.header}  id="standard-basic" label="Article Title" variant="standard"
-                        
-                            onChange={(e)=>{
-                                const newHeader = e.target.value;
-                                setContents((prev)=>
-                                    prev.map((item,i)=>
-                                        i===index ? {...item,header:newHeader} : item
+                        <div className="inputWrapper">
+                            <span className="inputWrapper__header__primary">
+                                Content Header
+                            </span>
+                            
+                            <TextField style={{width:'100%'}} value={content.header}  id="outlined-basic" variant="outlined"
+                                sx={{width:'100%',
+                                        "& .MuiOutlinedInput-root": {
+                                            borderRadius: "8px", // cleaner radius
+                                            height: "40px",      // control total height
+                                            "& input": {
+                                                padding: "0 12px", // remove vertical padding, keep horizontal
+                                                height: "100%",    // make text sit centered vertically
+                                            },
+                                            "& fieldset": {
+                                                borderRadius: "8px",
+                                            },
+                                        },
+
+                                    }}
+                                onChange={(e)=>{
+                                    const newHeader = e.target.value;
+                                    setContents((prev)=>
+                                        prev.map((item,i)=>
+                                            i===index ? {...item,header:newHeader} : item
+                                        )
                                     )
-                                )
-                            }}
+                                }}
+                            
                         
+                            />
+                        </div>
+
                         
-                        />
+                        <div className="inputWrapper">
+                            <span className="inputWrapper__header__primary">
+                                Content Body
+                            </span>
+                            <TextField
+                                value={content.content}
+                                id="outlined-multiline-static"
+                            
+                                multiline
+                                rows={15}
+                                defaultValue="Default Value"
+                                sx={{marginTop:'0px',width:'100%'}}
 
-                        <TextField
-                            value={content.content}
-                            id="outlined-multiline-static"
-                            label="Content"
-                            multiline
-                            rows={15}
-                            defaultValue="Default Value"
-                            sx={{marginTop:'30px',width:'95%'}}
 
-
-                            onChange={(e)=>{
-                                const newContent = e.target.value;
-                                setContents((prev)=>
-                                    prev.map((item,i)=>
-                                        i===index ? {...item,content:newContent} : item
+                                onChange={(e)=>{
+                                    const newContent = e.target.value;
+                                    setContents((prev)=>
+                                        prev.map((item,i)=>
+                                            i===index ? {...item,content:newContent} : item
+                                        )
                                     )
-                                )
-                            }}
+                                }}
 
 
 
                             />
 
+                        </div>
+
+
                     </div>
                 )
             })}
 
-            <div className="editUploadButtonWrapper">
+            <div className="actionWrapper" style={{width:'100%',
+                display:'flex',
+                flexDirection:'row',
+                alignItems:'center',
+                justifyContent:'space-between',
+                padding:'10px 30px'
+            }}>
                 <Button onClick={handleAddContent} className="createButton" sx={{ }}>Create new content wrapper</Button>
 
             

@@ -197,7 +197,7 @@ export default function DiseaseDatabase(){
 
             <div className="contentWrapper_diseaseDB">
                     <div className="filterWrapper">
-                        <Button sx={{backgroundColor:'#607D8B',height: '40px',}}  variant="contained" onClick={navigateToDiseaseUpload}>Create New Crop Data</Button>
+                        <Button sx={{backgroundColor:'#607D8B',height: '40px',}}  variant="contained" onClick={navigateToDiseaseUpload}>Create New Disease Data</Button>
 
 
 

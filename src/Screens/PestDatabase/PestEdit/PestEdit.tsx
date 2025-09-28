@@ -10,6 +10,7 @@ import { db } from '../../../firebaseconfig';
 import { useNavigate, useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 //dialog imports
 import Dialog from '@mui/material/Dialog';
@@ -20,7 +21,16 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 //icon import
 
-import { Bug } from 'lucide-react';
+import { Bug, Calendar, NotepadText, SquarePlus } from 'lucide-react';
+
+
+interface referenceInt{
+    id:number,
+    referenceTitle:string,
+    referenceLink:string,
+
+}
+
 
 
 export default function PestEdit(){
@@ -28,13 +38,14 @@ export default function PestEdit(){
     const{id} = useParams()
     const[deleteCode,setDeleteCode] = useState('')
     const navigate = useNavigate();
+
     const [cover, setCover] = useState<File | string>('');
     const [selectedSymptomImage, setSelectedSymptomImage] = useState<File[]>([]);
 
     //current symptom images
     const[currentSymptoms,setCurrentSymptoms] = useState<string[]>([]);
 
-
+    const [reference,setReference] = useState<referenceInt[]>([])
 
     const[pestName,setPestName] = useState("");
     const[scientificName,setScientificName] = useState("");
@@ -75,6 +86,24 @@ export default function PestEdit(){
         setSymptomImages(prev => prev.filter((_, i) => i !== index));
       };
 
+
+    const handleAddReference = () => {
+        const newReference: referenceInt = {
+            id:Date.now(),
+            referenceTitle:'',
+            referenceLink:'',
+        }
+
+        setReference(prev=> [...prev,newReference])
+    }
+
+    const handleRemoveReference = (indexToRemove:number) => {
+        setReference(
+            (prevContents) => 
+                prevContents.filter((_,index)=>index !== indexToRemove)
+        )
+    }
+
     useEffect(()=> {
         
         const fetchPestData = async()=>{
@@ -87,13 +116,15 @@ export default function PestEdit(){
                 const docRef = doc(db,"Pest",id as string);
                 console.log("Doc Ref : ", docRef);
                 const docSnap = await getDoc(docRef);
+                console.log("All fields in docSnap:", Object.keys(docSnap.data() || {}));
 
 
 
                 console.log("DocSnap : ", docSnap.data());
-
+                
 
                 if(docSnap.exists()){
+                    console.log("pest snapshot from docsnap : ", docSnap.data().PestSnapshot)
                     setPestName(docSnap.data().CommonName)
                     setScientificName(docSnap.data().ScientificName)
                     setCharacteristics(docSnap.data().Characterstics)
@@ -102,9 +133,10 @@ export default function PestEdit(){
                     setSymptoms(docSnap.data().DamageSymptoms.Symptoms)
                     setControlMeasures(docSnap.data().ControlMeasures)
                     setCover(docSnap.data().PestSnapshot)
+                    setReference(docSnap.data().reference ?? [])
 
                     console.log("Damage symptoms whole : ", docSnap.data().DamageSymptoms)
-
+                    console.log("Pest snapshot : ", docSnap.data().PestSnapshot)
                     console.log("Damage symptoms context : ", docSnap.data().DamageSymptoms.Symptoms)
                 }
 
@@ -118,6 +150,12 @@ export default function PestEdit(){
 
 
     },[])
+
+
+
+    useEffect(() => {
+    console.log("Cover updated: ", cover);
+    }, [cover]);
 
 
     const saveEdit = async()=>{
@@ -215,7 +253,8 @@ export default function PestEdit(){
                 Ecology:ecology,
                 DamageSymptoms:symptomsData,
                 ControlMeasures:controlMeasures,
-                PestSnapshot:newCover
+                PestSnapshot:newCover,
+                reference:reference
             }
 
             console.log("Pest data object : ", newPestData)
@@ -463,7 +502,11 @@ export default function PestEdit(){
 
 
 
+    const testFetchedData = () => {
 
+        console.log("Cover : ", cover)
+        console.log("Control Measure : ", controlMeasures)
+    }
 
 
     return(
@@ -479,14 +522,14 @@ export default function PestEdit(){
                         <Bug/>
                         <div className="headerWrapper_info_text">
                             
-                            <p className="headerWrapper_info_text_primary">Article Editor</p>
-                            <span className="headerWrapper_info_text_secondary">Edit and manage your content</span>
+                            <p className="headerWrapper_info_text_primary">Pest Data Editor</p>
+                            <span className="headerWrapper_info_text_secondary">Edit and manage your pest data</span>
                         </div>
                     </div>
 
                     <div className="headerWrapper_ArticleEdit_buttonWrappers">
-                        <Button variant="contained"  onClick={()=>setOpenDeleteConfirm(true)} sx={{height:'40px',backgroundColor:'red'}}>Delete Article</Button>
-                        <Button variant="contained" onClick={()=>setOpenUpdateConfirm(true)} sx={{height:'40px'}}>Save Edited Article</Button>
+                        <Button variant="contained"  onClick={()=>setOpenDeleteConfirm(true)} sx={{height:'40px',backgroundColor:'red'}}>Delete Pest Data</Button>
+                        <Button variant="contained" onClick={()=>setOpenUpdateConfirm(true)} sx={{height:'40px'}}>Save Changes</Button>
                     </div>
 
 
@@ -511,14 +554,131 @@ export default function PestEdit(){
 
                 </div>
 
-                <TextField value={pestName} onChange={(e)=>setPestName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Pest Name....." variant="standard" />
-                <TextField value={scientificName} onChange={(e)=>setScientificName(e.target.value)} sx={{marginTop:'30px',fontSize:'30px',width:'100%'}} id="standard-basic" label="Scientific Name....." variant="standard" />
+                <div className="sectionWrapper">
+                    <div className="sectionHeader">
+                        <div className="headerIconWrapper" style={{backgroundColor:'#CEFCE2'}}>
+                            <NotepadText size={'20px'} color='#1C8960' />
+                        </div>
+                        <span className="sectionHeader__Primary">
+                            Basic Information
+                        </span>
+                    </div>
+                    
+                    <div className="inputWrapper">
+                        <span className="inputWrapper__header__primary">
+                            Pest common name
+                        </span>
+                        <TextField value={pestName} 
+                            onChange={(e)=>setPestName(e.target.value)} 
+                            sx={{marginTop:'0px',fontSize:'30px',width:'100%',
+
+                                "& .MuiOutlinedInput-root": {
+                                    borderRadius: "8px", // cleaner radius
+                                    height: "40px",      // control total height
+                                    "& input": {
+                                        padding: "0 12px", // remove vertical padding, keep horizontal
+                                        height: "100%",    // make text sit centered vertically
+                                    },
+                                    "& fieldset": {
+                                        borderRadius: "8px",
+                                    },
+                                },
+
+                            }} 
+                            id="outlined-basic" variant="outlined" />
+                    </div>
 
 
+                    <div className="inputWrapper">
+                        <span className="inputWrapper__header__primary">
+                            Pest scientific name
+                        </span>
+                        <TextField value={scientificName} 
+                            onChange={(e)=>setScientificName(e.target.value)} 
+                            sx={{marginTop:'0px',fontSize:'30px',width:'100%',
 
-                <div className="contentWrapper">
+
+                                "& .MuiOutlinedInput-root": {
+                                    borderRadius: "8px", // cleaner radius
+                                    height: "40px",      // control total height
+                                    "& input": {
+                                        padding: "0 12px", // remove vertical padding, keep horizontal
+                                        height: "100%",    // make text sit centered vertically
+                                    },
+                                    "& fieldset": {
+                                        borderRadius: "8px",
+                                    },
+                                },
+
+                            }} 
+                            id="outlined-basic" variant="outlined" />
+                    </div>
+
+                </div>
+                <div className="referenceWrapper" style={{marginTop:"20px"}}>
+
+                    <div className="sectionHeader">
+                        <div className="headerIconWrapper" style={{backgroundColor:'#E1E6FF'}}>
+                    
+                            <Calendar size={'20px'} color='#4F4D96' />
+                        </div>
+                        <span className="sectionHeader__Primary">
+                            References
+                        </span>
+                        <Button onClick={handleAddReference} 
+                            startIcon={<SquarePlus />}
+                            className="createButton" 
+                            sx={{ color:'#309C78',marginTop: 'auto',marginBottom:'auto',lineHeight: 1, marginLeft:'auto'}}>
+                                Add new Reference</Button>
+                    </div>
+
+                    <div className="referenceContentWrapper" style={reference.length <= 0 ? { display: "none" } : {}}>
+
+                                {reference?.map((reference,index)=>{
+
+                                    return(
+                                        <div className="referenceItem">
+                                            <TextField placeholder='Reference Title' sx={{width:'30%'}}
+                                                value={reference.referenceTitle}
+                                                onChange={(e)=> {
+                                                    const newTitle = e.target.value;
+                                                    setReference((prev)=>
+                                                        prev.map((item,i)=>
+                                                            i === index ? {...item,referenceTitle:newTitle} : item
+                                                        )
+                                                    )
+                                                }}
+
+                                            />
+                                            
+                                            <TextField placeholder='Reference Link' sx={{width:'70%'}}
+                                                value={reference.referenceLink}
+                                                onChange={(e)=>{
+                                                    const newLink = e.target.value.trim();
+
+                                                    setReference((prev)=>
+                                                        prev.map((item,i)=>
+                                                            i === index ? {...item,referenceLink:newLink}:item
+                                                        )
+                                                    )
+                                                }}
+                                            
+                                            
+                                            />
+                                            <RemoveCircleIcon 
+                                                onClick={()=> handleRemoveReference(index)}
+                                                sx={{fontSize: 30}} />
+                                        </div>
+                                    )
+
+                                })}
+                    </div>
+                   
+                </div>
+
+                <div className="contentWrapper" style={{borderRadius:0,borderColor:'#e2e8f0'}}>
                     <div className="contentHeaderWrapper">
-                        <span className="contentHeader">Characteristics</span>
+                        <span className="sectionHeader__Primary">Characteristics</span>
                     </div>
 
 
@@ -539,9 +699,9 @@ export default function PestEdit(){
 
 
                 
-                <div className="contentWrapper">
+                <div className="contentWrapper" style={{borderRadius:0,borderColor:'#e2e8f0'}}>
                     <div className="contentHeaderWrapper">
-                        <span className="contentHeader">Ecology</span>
+                        <span className="sectionHeader__Primary">Ecology</span>
                     </div>
 
 
@@ -562,9 +722,9 @@ export default function PestEdit(){
                 </div>
 
 
-                <div className="contentWrapper">
+                <div className="contentWrapper" style={{borderRadius:0,borderColor:'#e2e8f0'}}>
                     <div className="contentHeaderWrapper">
-                        <span className="contentHeader">Damage Symptoms</span>
+                        <span className="sectionHeader__Primary">Damage Symptoms</span>
                     </div>
 
 
@@ -585,7 +745,7 @@ export default function PestEdit(){
 
 
 
-                    <div className="damageSymptomWrapper">
+                    <div className="damageSymptomWrapper" style={{borderRadius:0,borderColor:'#e2e8f0'}}>
 
                         {symptomImages.map((img, index) => (
                             <img src={typeof img === 'string' ? img : URL.createObjectURL(img)} alt="" className="symptomImage" key={index} onClick={()=>handleRemoveImage(index)}/>
@@ -598,9 +758,9 @@ export default function PestEdit(){
                     </div>
                 </div>
 
-                <div className="contentWrapper">
+                <div className="contentWrapper" style={{borderRadius:0,borderColor:'#e2e8f0'}}>
                     <div className="contentHeaderWrapper">
-                        <span className="contentHeader">Control Measures</span>
+                        <span className="sectionHeader__Primary">Control Measures</span>
                     </div>
 
 
@@ -615,6 +775,10 @@ export default function PestEdit(){
 
                         />
                 </div>
+
+                <Button
+                    onClick={testFetchedData}
+                >TEst data </Button>
 
          
              

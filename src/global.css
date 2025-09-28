@@ -10,6 +10,56 @@
 }
 
 
+.inputWrapper{
+    width: 100%;
+    border: 0px solid red;
+    display: flex;
+    flex-direction: column;
+    padding: 5px 0px;
+    align-items: flex-start;
+    gap: 5px;
+
+}
+.inputWrapper__header__primary{
+    font-size: 1rem;
+    
+
+}
+
+
+.sectionWrapper{
+    display: flex;
+    flex-direction: column;
+    padding: 10px 30px;
+    border: 0px solid black;
+}
+
+.sectionHeader{
+    width: 100%;
+    padding: 10px 0px;
+    display: flex;
+    flex-direction: row;
+    border: 0px solid green;
+    align-items: center;
+    gap: 10px;
+}
+
+.sectionHeader__Primary{
+    font-size: 1.15rem;
+    font-weight: 500;
+}
+
+.headerIconWrapper{
+    width: 35px;
+    height: 35px;
+    border: 0px solid red;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
 @media(min-width:325px){
     .filterWrapper{
         width: 100%;
