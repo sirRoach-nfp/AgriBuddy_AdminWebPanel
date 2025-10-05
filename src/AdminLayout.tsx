@@ -14,7 +14,7 @@ import { Outlet, useNavigate,useLocation } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from './firebaseconfig';
 import { toast } from 'react-toastify';
-
+import iconAgriBuddy from './../src/assets/AgriBuddyAppIcon.png';
 
 
 import { Wheat, Newspaper, Sprout, Bug, Worm,Flag } from 'lucide-react';
@@ -56,8 +56,16 @@ export default function Adminlayout(){
       <>
       {/* Logo Section */}
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', alignItems: 'center', p: 2 }}>
-        <div style={{ padding: '.75rem', backgroundColor: '#607D8B', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Wheat color='white' />
+        <div style={{ 
+            padding: 0,
+            width:50,
+            height:50, 
+            backgroundColor: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img src={iconAgriBuddy} alt=""
+            style={{
+              width:'100%',height:'100%',borderRadius:'20%'
+            }}
+          />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <p style={{ fontWeight: '700', fontSize: '1rem', color: '#37474F' }}>AgriBuddy</p>

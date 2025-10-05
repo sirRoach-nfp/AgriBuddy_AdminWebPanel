@@ -206,7 +206,7 @@ export default function ReportedContent(){
                 </div>
 
 
-                <div className="contentWrapper">
+                <div className="contentWrapper" style={{border:0}}>
                     {loading && !reports.length ? (
                         <p>Loading...</p>
                     ) : reports.length === 0 ? (
@@ -238,13 +238,7 @@ export default function ReportedContent(){
 
                     {loading && reports.length > 0 && <p>Loading more...</p>}
                 </div>
-                <Button
-                        onClick={() => console.log(reports)}
-                        sx={{ marginTop: "20px" }}
-                        variant="contained"
-                    >
-                        check data
-                </Button>
+     
 
       
             </div>

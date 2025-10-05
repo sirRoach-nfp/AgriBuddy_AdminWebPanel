@@ -375,22 +375,7 @@ export default function ExpandedReported(){
 
                     
                 </div>
-                <Button
-                    variant="outlined"
-                    style={{ width: "100%" }}
-                    sx={{
-                        mt: 0,
-                        backgroundColor:"transparent",
-                        color: "red",
-                        borderColor:'#e2e8f0',
-                        border: 1
-                    }}
-                    onClick={() => console.log("Report data : ",reportDetails)}
-                
-                
-                    >
-                    check Data
-                </Button>
+   
 
 
                 
