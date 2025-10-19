@@ -76,9 +76,11 @@ export default function ReportedContent(){
             // Apply filters if not "All"
             if (reasonFilter !== "All") {
             q = query(q, where("_reportReason", "==", reasonFilter));
+            console.log("Reason query ", q)
             }
             if (contentFilter !== "All") {
             q = query(q, where("_reportType", "==", contentFilter));
+            console.log("Report type query ", q)
             }
 
             if (isLoadMore && lastDoc) {
@@ -187,9 +189,9 @@ export default function ReportedContent(){
                                 }}
                             onChange={handleReason}>
                                 <MenuItem value="All">All</MenuItem>
-                                <MenuItem value="Spam&UnwantedContent" >Spam or Unwanted Content</MenuItem>
+                                <MenuItem value="Spam" >Spam or Unwanted Content</MenuItem>
                                 <MenuItem value="Harassment">Harassment or Bullying</MenuItem>
-                                <MenuItem value="FalseInfo">False or Misleading Information</MenuItem>
+                                <MenuItem value="FalseInformation">False or Misleading Information</MenuItem>
                                 <MenuItem value="InappropriateContent">Inappropriate Content</MenuItem>
                             
                     
