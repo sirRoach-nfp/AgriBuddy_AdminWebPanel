@@ -58,7 +58,79 @@ export default function ArticleEdit(){
       };
 
     const [openConfirmation,setConfirmation] = useState(false)
+    const [openDeleteConfirm,setOpenDeleteConfirm] = useState(false);
+    const [openUpdateConfirm,setOpenUpdateConfirm] = useState(false);
 
+
+    const deleteDialog = ()=> (
+
+        <Dialog
+        open={openDeleteConfirm}
+
+        keepMounted
+        onClose={() =>setOpenDeleteConfirm(false)}
+        aria-describedby="alert-dialog-slide-description"
+        >
+
+        <DialogTitle sx={{color:'red'}}>{"Delete Article Data From The Database?"}</DialogTitle>
+        <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description" sx={{color:'red'}}>
+                Deleting this article will permanently remove it from the system.
+    
+                This action cannot be undone.
+                Are you sure you want to continue?
+                
+            </DialogContentText>
+
+
+        </DialogContent>
+
+
+
+        <DialogActions>
+            <Button onClick={() =>setOpenDeleteConfirm(false)}>Cancel Action</Button>
+            <Button onClick={() =>deleteArticle()}>Continue</Button>
+        </DialogActions>
+        </Dialog>
+
+
+    )
+
+
+    const updateDialog = ()=> (
+    
+            <Dialog
+              open={openUpdateConfirm}
+      
+              keepMounted
+              onClose={() =>setOpenUpdateConfirm(false)}
+              aria-describedby="alert-dialog-slide-description"
+            >
+      
+              <DialogTitle >{"Update Article Data ?"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description" >
+                    Updating this article data will affect all users who are currently viewing this article.
+
+                    Please ensure the new information is accurate before proceeding.
+                      
+                </DialogContentText>
+    
+              </DialogContent>
+      
+      
+      
+              <DialogActions>
+                <Button onClick={() =>setOpenUpdateConfirm(false)}>Cancel Action</Button>
+                <Button onClick={() =>saveEdit()}>Continue</Button>
+              </DialogActions>
+            </Dialog>
+      
+      
+    )
+
+        
+    
 
     const handleRemoveContent = (indexToRemove: number) => {
         setContents((prevContents) =>
@@ -78,6 +150,7 @@ export default function ArticleEdit(){
 
     const deleteArticle = async()=>{
         try{
+            setOpenDeleteConfirm(false)
             const articleRef = doc(db, "Articles", id as string);
             await deleteDoc(articleRef)
             console.log("Article deleted successfully");
@@ -121,8 +194,8 @@ export default function ArticleEdit(){
 
     const saveEdit = async() => {
 
-        try{
-
+        try{    
+            setOpenUpdateConfirm(false)
             console.log("Saving changes made........")
             const articleRef = doc(db,'Articles',id as string);
 
@@ -172,7 +245,11 @@ export default function ArticleEdit(){
     }
 
     return(
+
         <>
+        
+            {deleteDialog()}
+            {updateDialog()}
             <div className="mainWrapper">
                 
 
@@ -191,8 +268,8 @@ export default function ArticleEdit(){
                     </div>
 
                     <div className="headerWrapper_ArticleEdit_buttonWrappers">
-                        <Button variant="contained" onClick={saveEdit} sx={{height:'40px',backgroundColor:'#607D8B'}}>Save Edited Article</Button>
-                        <Button variant="contained" onClick={deleteArticle} sx={{backgroundColor:'red',height:'40px'}}>Delete Article</Button>
+                        <Button variant="contained" onClick={() => setOpenUpdateConfirm(true)} sx={{height:'40px',backgroundColor:'#607D8B'}}>Save Edited Article</Button>
+                        <Button variant="contained" onClick={() => setOpenDeleteConfirm(true)} sx={{backgroundColor:'red',height:'40px'}}>Delete Article</Button>
                     </div>
                     
                     

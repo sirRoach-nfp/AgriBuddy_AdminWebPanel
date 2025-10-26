@@ -24,7 +24,7 @@ import { TransitionProps } from '@mui/material/transitions';
 
 //icon import
 import { BugOff, Calendar, CheckLine, NotepadText, Sprout, SquarePlus, Worm } from "lucide-react";
-import { Box, FormControl, InputLabel,MenuItem,Select as MuiSelect  } from "@mui/material";
+import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, InputLabel,MenuItem,Select as MuiSelect  } from "@mui/material";
 
 
 
@@ -82,6 +82,10 @@ const months = [
 { name: "December", value: 12 },
 ];
 
+type BestSeason =
+  | { start: number; end: number } // old data
+  | { months: number[] }; // new data
+
 
 //all pest data dummy
 export default function CropUpdate(){
@@ -96,10 +100,14 @@ export default function CropUpdate(){
 
     const [pestSelection,setPestSelection] = useState<Pest[]>([]);
     const[diseaseSelection,setDiseaseSelection] = useState<Disease[]>([]);
+
+    /*
     const [bestSeason, setBestSeason] = useState<{ start: number | "", end: number | "" }>({
         start: "",
         end: "",
-    });
+    });*/
+
+    const [bestSeason, setBestSeason] = useState<BestSeason>({ months: [] });
 
     const [cover,setCover] = useState<File | string>('');
     const [seedToHectare,setSeedToHectare] = useState<number>()
@@ -111,6 +119,30 @@ export default function CropUpdate(){
     const[soilPh,setSoilPh] = useState("");
     const[soilType,setSoilType] = useState<string[]>([]);
 
+    const convertToArray = (data?: BestSeason): number[] => {
+        if (!data) return [];
+        if ("months" in data) return data.months; // new format
+        const { start, end } = data;
+        if (start && end) {
+        return start <= end
+            ? Array.from({ length: end - start + 1 }, (_, i) => start + i)
+            : Array.from({ length: 12 - start + end + 1 }, (_, i) => ((start + i - 1) % 12) + 1);
+        // handles wrap-around like Nov → Feb
+        }
+        return [];
+    };
+
+    const [selectedMonths, setSelectedMonths] = useState<number[]>(
+    []
+  );
+
+    const handleToggleMonth = (monthValue: number) => {
+        setSelectedMonths((prev) =>
+        prev.includes(monthValue)
+            ? prev.filter((m) => m !== monthValue)
+            : [...prev, monthValue].sort((a, b) => a - b)
+        );
+    };
 
 
     const handleCheckboxChangeSoil = (soil: string) => {
@@ -188,94 +220,67 @@ export default function CropUpdate(){
     }
 
 
-    useEffect(()=>{
-        
-        const fetchCropData = async () => {
+    useEffect(() => {
+    const fetchCropData = async () => {
+      try {
+        console.log("Fetching Document with the id of : ", id);
 
-            console.log("Fetching Document with the id of : ", id);
+        const docRef = doc(db, "Crops", id as string);
+        const docSnap = await getDoc(docRef);
 
+        if (docSnap.exists()) {
+          const data = docSnap.data();
 
+          setCover(data.cropCover ?? "");
+          setCropName(data.cropName ?? "");
+          setScientificName(data.scientificName ?? "");
+          setFamily(data.family ?? "");
+          setGrowthTime(data.growthTime ?? "");
+          setSoilPh(data.soilPh ?? "");
+          setSelectedDiseases(data.diseases ?? []);
+          setSelectedPests(data.pests ?? []);
+          setContents(data.contents ?? []);
+          setSoilType(data.soilType ?? []);
+          setSeedToHectare(data.seedRatio ?? undefined);
+          setReference(data.reference ?? []);
 
-            try{
-
-
-                const docRef = doc(db, "Crops", id as string);
-                const docSnap = await getDoc(docRef);
-                console.log("Returned Data : ", docSnap.data())
-
-
-                if(docSnap.exists()){
-
-
-                    setCover(docSnap.data().cropCover)
-                    setCropName(docSnap.data().cropName)
-                    setScientificName(docSnap.data().scientificName)
-                    setFamily(docSnap.data().family)
-                    setGrowthTime(docSnap.data().growthTime)
-                    setBestSeason(docSnap.data().bestSeason)
-                    setSoilPh(docSnap.data().soilPh)
-                    setSelectedDiseases(docSnap.data().diseases)
-                    setSelectedPests(docSnap.data().pests)
-                    setContents(docSnap.data().contents)
-                    setSoilType(docSnap.data().soilType)
-                    setBestSeason(docSnap.data().optimalSeason)
-                    setSeedToHectare(docSnap.data().seedRatio)
-                    setReference(docSnap.data().reference ?? [])
-                }
-
-
-                const pestsRef = collection(db,'Pest')  
-                const pestSnap = await getDocs(pestsRef)
-
-                if(pestSnap){
-
-                    const rawData = pestSnap.docs.map(doc=>({
-
-                        pestId:doc.id,
-                        pestName:doc.data().CommonName || "",
-                        pestCoverImage:doc.data().PestSnapshot || ""
-
-                    }))
-
-                    setPestSelection(rawData)
-                    console.log("Pest Selection : ", rawData)
-                }
-
-                const diseaseRef = collection(db,'Disease')
-                const diseaseSnap = await getDocs(diseaseRef)
-
-
-                if(diseaseSnap){
-
-                    const rawData = diseaseSnap.docs.map(doc=>({
-
-                        diseaseId:doc.id,
-                        diseaseName:doc.data().CommonName || "",
-                        diseaseCoverImage:doc.data().DiseaseSnapshot || ""
-
-
-                    }))
-                    setDiseaseSelection(rawData)
-                    console.log("Disease Selection : ", rawData)
-
-
-
-                }
-
-                console.log("Fetch Done !")
-
-
-
-
-                
-
-            }catch(err){
-
-            }
+          // Backward compatibility: read bestSeason or optimalSeason
+          const seasonData = data.bestSeason ?? data.optimalSeason;
+          const monthsFromData = convertToArray(seasonData);
+          setSelectedMonths(monthsFromData);
+          setBestSeason({ months: monthsFromData });
         }
 
-        fetchCropData()
-    },[id])
+        // fetch pests
+        const pestsRef = collection(db, "Pest");
+        const pestSnap = await getDocs(pestsRef);
+        if (pestSnap) {
+          const rawData = pestSnap.docs.map((d) => ({
+            pestId: d.id,
+            pestName: d.data().CommonName || "",
+            pestCoverImage: d.data().PestSnapshot || "",
+          }));
+          setPestSelection(rawData);
+        }
+
+        // fetch diseases
+        const diseaseRef = collection(db, "Disease");
+        const diseaseSnap = await getDocs(diseaseRef);
+        if (diseaseSnap) {
+          const rawData = diseaseSnap.docs.map((d) => ({
+            diseaseId: d.id,
+            diseaseName: d.data().CommonName || "",
+            diseaseCoverImage: d.data().DiseaseSnapshot || "",
+          }));
+          setDiseaseSelection(rawData);
+        }
+      } catch (err) {
+        console.error("Error fetching crop data:", err);
+      }
+    };
+
+    fetchCropData();
+  }, [id]);
 
 
 
@@ -383,6 +388,9 @@ export default function CropUpdate(){
             }
 
 
+            // Prepare season object to save — ALWAYS save new format { months: [] }
+            const sortedMonths = [...selectedMonths].sort((a, b) => a - b);
+            const seasonToSave = { months: sortedMonths };
 
             const UpdatedCrop = {
                 //cropId: cropName + Date.now().toString(),
@@ -397,18 +405,23 @@ export default function CropUpdate(){
                 diseases:selectedDiseases,
                 contents:contents,
                 soilType:soilType,
-                optimalSeason:bestSeason,
+                optimalSeason:seasonToSave,
                 seedRatio:seedToHectare,
                 reference:reference,
             }
+            console.log("Season to save : ", seasonToSave)
+            console.log("Sorted Months : ", sortedMonths)
+            console.log("Selected month : ", selectedMonths)
             console.log("Updated Crop : ", UpdatedCrop)
 
-
+            
             const cropRef = doc(db,'Crops',id as string)
             await updateDoc(cropRef,UpdatedCrop)
 
             toast.success("Crop data was updated successfully");
             navigate("/admin/Crop_database")
+
+            
 
         }catch(err){console.error(err)}
     }
@@ -722,54 +735,42 @@ export default function CropUpdate(){
 
         </div>      
         
+        {/* Optimal Season (checkbox months) */}
         <div className="bestSeasonWrapper">
-            <div className="sectionHeader">
-                <div className="headerIconWrapper" style={{backgroundColor:'#FFEED0'}}>
-                
-                    <Calendar size={'20px'} color='#DD8057' />
-                </div>
-                <span className="sectionHeader__Primary">
-                    Optimal Season
-                </span>
+          <div className="sectionHeader">
+            <div
+              className="headerIconWrapper"
+              style={{ backgroundColor: "#FFEED0" }}
+            >
+              <Calendar size={"20px"} color="#DD8057" />
             </div>
+            <span className="sectionHeader__Primary">Optimal Season</span>
+          </div>
 
-            <Box sx={{ display: "flex", gap: 2, marginTop: "15px",flexDirection:'column'}}>
-                {/* Start Month */}
-                <FormControl sx={{ flex: 1 }}>
-                    <InputLabel id="start-month-label">Start Month</InputLabel>
-                    <MuiSelect
-                    labelId="start-month-label"
-                    value={bestSeason.start}
-                    onChange={(e) =>
-                        setBestSeason((prev) => ({ ...prev, start: e.target.value as number }))
-                    }
-                    >
-                    {months.map((m) => (
-                        <MenuItem key={m.value} value={m.value}>
-                        {m.name}
-                        </MenuItem>
-                    ))}
-                    </MuiSelect>
-                </FormControl>
-
-                {/* End Month */}
-                <FormControl sx={{ flex: 1 }}>
-                    <InputLabel id="end-month-label">End Month</InputLabel>
-                    <MuiSelect
-                    labelId="end-month-label"
-                    value={bestSeason.end}
-                    onChange={(e) =>
-                        setBestSeason((prev) => ({ ...prev, end: e.target.value as number }))
-                    }
-                    >
-                    {months.map((m) => (
-                        <MenuItem key={m.value} value={m.value}>
-                        {m.name}
-                        </MenuItem>
-                    ))}
-                    </MuiSelect>
-                </FormControl>
-            </Box>
+          <Box sx={{ marginTop: "15px" }}>
+     
+            <FormGroup
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 1,
+                flexDirection: "row",
+              }}
+            >
+              {months.map((m) => (
+                <FormControlLabel
+                  key={m.value}
+                  control={
+                    <Checkbox
+                      checked={selectedMonths.includes(m.value)}
+                      onChange={() => handleToggleMonth(m.value)}
+                    />
+                  }
+                  label={m.name}
+                />
+              ))}
+            </FormGroup>
+          </Box>
         </div>
 
         <div className="referenceWrapper">

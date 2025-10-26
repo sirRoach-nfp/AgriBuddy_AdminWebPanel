@@ -23,7 +23,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { Box, FormControl, InputLabel,MenuItem,Select as MuiSelect } from '@mui/material';
+import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, InputLabel,MenuItem,Select as MuiSelect } from '@mui/material';
 import { BugOff, Calendar, CheckLine, NotepadText, SquarePlus, Worm } from 'lucide-react';
 
 
@@ -59,20 +59,10 @@ const pestsnew = [
     },
   ];
 
-const months = [
-{ name: "January", value: 1 },
-{ name: "February", value: 2 },
-{ name: "March", value: 3 },
-{ name: "April", value: 4 },
-{ name: "May", value: 5 },
-{ name: "June", value: 6 },
-{ name: "July", value: 7 },
-{ name: "August", value: 8 },
-{ name: "September", value: 9 },
-{ name: "October", value: 10 },
-{ name: "November", value: 11 },
-{ name: "December", value: 12 },
-];
+
+type BestSeason = {
+    months:number[]
+}
 
 type Pest = {
 pestId: string;
@@ -98,6 +88,22 @@ const soilTypes = [
     "Silty Loam",
     "Sandy Clay Loam"
   ];
+
+const months = [
+  { name: "January", value: 1 },
+  { name: "February", value: 2 },
+  { name: "March", value: 3 },
+  { name: "April", value: 4 },
+  { name: "May", value: 5 },
+  { name: "June", value: 6 },
+  { name: "July", value: 7 },
+  { name: "August", value: 8 },
+  { name: "September", value: 9 },
+  { name: "October", value: 10 },
+  { name: "November", value: 11 },
+  { name: "December", value: 12 },
+];
+
 export default function CropUpload(){
 
 
@@ -106,10 +112,28 @@ export default function CropUpload(){
 
     const[pestSelection,setPestSelection] = useState<Pest[]>([]);
     const[diseaseSelection,setDiseaseSelection] = useState<Disease[]>([]);
+
+    /*
     const [bestSeason, setBestSeason] = useState<{ start: number | "", end: number | "" }>({
         start: "",
         end: "",
     });
+    */
+
+    const [bestSeason, setBestSeason] = useState<BestSeason>({ months: [] });
+
+
+    const handleToggle = (monthValue: number) => {
+        setBestSeason((prev) => {
+        const isSelected = prev.months.includes(monthValue);
+        const updatedMonths = isSelected
+            ? prev.months.filter((m) => m !== monthValue)
+            : [...prev.months, monthValue];
+        return { ...prev, months: updatedMonths };
+        });
+    };
+
+    
 
     const [contents,setContents] = useState<contentsInt[]>([]);
     const [reference,setReference] = useState<referenceInt[]>([])
@@ -302,10 +326,14 @@ export default function CropUpload(){
            
 
             const CropRef = doc(db,'Crops',cropNameAsDocId)
+
+           
             console.log("New Crop Data : ", newCrop)
             await setDoc(CropRef,newCrop)
             toast.success("Crop data was uploaded successfully");
             navigate("/admin/crop_database")
+           
+           
            
            console.log("Data set : ", newCrop)
 
@@ -602,43 +630,27 @@ export default function CropUpload(){
                     </span>
                 </div>
 
-                <Box sx={{ display: "flex", gap: 2, marginTop: "15px",flexDirection:'column'}}>
-                    {/* Start Month */}
-                    <FormControl sx={{ flex: 1 }}>
-                        <InputLabel id="start-month-label">Start Month</InputLabel>
-                        <MuiSelect
-                        labelId="start-month-label"
-                        value={bestSeason.start}
-                        onChange={(e) =>
-                            setBestSeason((prev) => ({ ...prev, start: e.target.value as number }))
-                        }
-                        >
-                        {months.map((m) => (
-                            <MenuItem key={m.value} value={m.value}>
-                            {m.name}
-                            </MenuItem>
-                        ))}
-                        </MuiSelect>
-                    </FormControl>
 
-                    {/* End Month */}
-                    <FormControl sx={{ flex: 1 }}>
-                        <InputLabel id="end-month-label">End Month</InputLabel>
-                        <MuiSelect
-                        labelId="end-month-label"
-                        value={bestSeason.end}
-                        onChange={(e) =>
-                            setBestSeason((prev) => ({ ...prev, end: e.target.value as number }))
-                        }
-                        >
+
+                <Box sx={{ marginTop: "15px" }}>
+         
+                    <FormGroup sx={{ display: "flex", flexWrap: "wrap", gap: 1,flexDirection:'row' }}>
                         {months.map((m) => (
-                            <MenuItem key={m.value} value={m.value}>
-                            {m.name}
-                            </MenuItem>
+                        <FormControlLabel
+                            key={m.value}
+                            control={
+                            <Checkbox
+                                checked={bestSeason.months.includes(m.value)}
+                                onChange={() => handleToggle(m.value)}
+                            />
+                            }
+                            label={m.name}
+                        />
                         ))}
-                        </MuiSelect>
-                    </FormControl>
+                    </FormGroup>
                 </Box>
+
+
             </div>
                
             <div className="referenceWrapper">
